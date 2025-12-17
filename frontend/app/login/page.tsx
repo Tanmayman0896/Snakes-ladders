@@ -64,6 +64,12 @@ export default function LoginPage() {
             >
               SuperAdmin Login
             </button>
+            <button
+              onClick={() => router.push("/participant/login")}
+              className="w-full px-6 py-3 bg-gray-400 text-white rounded border border-gray-400 hover:bg-gray-500 transition-colors font-medium"
+            >
+              Participant Login
+            </button>
           </div>
         ) : (
           <form onSubmit={handleLogin} className="space-y-6">
@@ -86,9 +92,6 @@ export default function LoginPage() {
               <h2 className="text-xl font-bold text-gray-900">
                 {loginType === "admin" ? "Admin" : "SuperAdmin"} Login
               </h2>
-              <p className="text-xs text-gray-500 mt-1">
-                {loginType === "admin" ? "Demo: ADMIN001 / admin123" : "Demo: SUPER001 / super123"}
-              </p>
             </div>
 
             {/* Error Message */}
@@ -103,7 +106,6 @@ export default function LoginPage() {
                 type="text"
                 value={teamId}
                 onChange={(e) => setTeamId(e.target.value)}
-                placeholder={loginType === "admin" ? "ADMIN001" : "SUPER001"}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
                 required
               />
@@ -116,7 +118,6 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
                 required
               />
