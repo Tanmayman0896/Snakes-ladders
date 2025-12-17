@@ -130,6 +130,7 @@ export default function SuperAdminDashboard() {
       timestamp: "2025-12-17 11:20:00",
     },
   ])
+  const [generatedPasswords, setGeneratedPasswords] = useState<Record<string, string>>({})
 
   useEffect(() => {
     const userRole = localStorage.getItem("userRole")
@@ -137,6 +138,20 @@ export default function SuperAdminDashboard() {
       router.push("/login")
     }
   }, [router])
+
+  const generateRandomPassword = () => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    let password = ""
+    for (let i = 0; i < 5; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return password
+  }
+
+  const handleGeneratePassword = (teamId: string) => {
+    const newPassword = generateRandomPassword()
+    setGeneratedPasswords((prev) => ({ ...prev, [teamId]: newPassword }))
+  }
 
   const handleCreateTeam = () => {
     if (!newTeamId || !newTeamMembers || !newTeamPassword) return
@@ -376,9 +391,35 @@ export default function SuperAdminDashboard() {
                         >
                           {team.disqualified ? "Reactivate" : "Disqualify"}
                         </button>
+                        <button
+                          onClick={() => handleGeneratePassword(team.id)}
+                          className="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                        >
+                          Generate Password
+                        </button>
                       </>
                     )}
                   </div>
+
+                  {/* Generated Password Display */}
+                  {generatedPasswords[team.id] && (
+                    <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded flex justify-between items-center">
+                      <p className="text-sm text-green-800">
+                        <span className="font-medium">New Password:</span>{" "}
+                        <span className="font-mono font-bold">{generatedPasswords[team.id]}</span>
+                      </p>
+                      <button
+                        onClick={() => setGeneratedPasswords((prev) => {
+                          const newPasswords = { ...prev }
+                          delete newPasswords[team.id]
+                          return newPasswords
+                        })}
+                        className="text-green-700 hover:text-green-900 text-sm font-medium"
+                      >
+                        ✕ Hide
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
