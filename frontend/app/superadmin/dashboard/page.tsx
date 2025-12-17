@@ -11,6 +11,13 @@ interface Team {
   currentRoom: number
   totalTime: number
   disqualified: boolean
+  checkpoints: Array<{
+    position: number
+    checkpointApproved: boolean
+    questionId: string | null
+    questionAssigned: boolean
+    answerStatus: "pending" | "correct" | "incorrect" | null
+  }>
 }
 
 interface Question {
@@ -39,6 +46,12 @@ export default function SuperAdminDashboard() {
       currentRoom: 3,
       totalTime: 1200,
       disqualified: false,
+      checkpoints: [
+        { position: 1, checkpointApproved: true, questionId: "Q001", questionAssigned: true, answerStatus: "correct" },
+        { position: 6, checkpointApproved: true, questionId: "Q002", questionAssigned: true, answerStatus: "incorrect" },
+        { position: 12, checkpointApproved: true, questionId: "Q003", questionAssigned: true, answerStatus: "pending" },
+        { position: 18, checkpointApproved: false, questionId: null, questionAssigned: false, answerStatus: null },
+      ],
     },
     {
       id: "TEAM002",
@@ -47,6 +60,10 @@ export default function SuperAdminDashboard() {
       currentRoom: 2,
       totalTime: 900,
       disqualified: false,
+      checkpoints: [
+        { position: 1, checkpointApproved: true, questionId: "Q004", questionAssigned: true, answerStatus: "correct" },
+        { position: 5, checkpointApproved: true, questionId: "Q005", questionAssigned: true, answerStatus: "correct" },
+      ],
     },
     {
       id: "TEAM003",
@@ -55,6 +72,11 @@ export default function SuperAdminDashboard() {
       currentRoom: 5,
       totalTime: 2100,
       disqualified: false,
+      checkpoints: [
+        { position: 1, checkpointApproved: true, questionId: "Q001", questionAssigned: true, answerStatus: "correct" },
+        { position: 10, checkpointApproved: true, questionId: "Q006", questionAssigned: true, answerStatus: "incorrect" },
+        { position: 20, checkpointApproved: true, questionId: null, questionAssigned: false, answerStatus: null },
+      ],
     },
   ])
   const [questions, setQuestions] = useState<Question[]>([
@@ -165,6 +187,7 @@ export default function SuperAdminDashboard() {
         currentRoom: 0,
         totalTime: 0,
         disqualified: false,
+        checkpoints: [],
       },
     ])
 
@@ -202,13 +225,47 @@ export default function SuperAdminDashboard() {
     setQuestions((prev) => prev.filter((q) => q.id !== questionId))
   }
 
+  // Undo checkpoint approval
+  const handleUndoCheckpointApproval = (teamId: string, checkpointIndex: number) => {
+    setTeams((prev) =>
+      prev.map((team) =>
+        team.id === teamId
+          ? {
+              ...team,
+              checkpoints: team.checkpoints.map((checkpoint, idx) =>
+                idx === checkpointIndex
+                  ? { ...checkpoint, checkpointApproved: false, questionId: null, questionAssigned: false, answerStatus: null }
+                  : checkpoint,
+              ),
+            }
+          : team,
+      ),
+    )
+  }
+
+  // Undo question answer (reset to pending)
+  const handleUndoQuestionAnswer = (teamId: string, checkpointIndex: number) => {
+    setTeams((prev) =>
+      prev.map((team) =>
+        team.id === teamId
+          ? {
+              ...team,
+              checkpoints: team.checkpoints.map((checkpoint, idx) =>
+                idx === checkpointIndex ? { ...checkpoint, answerStatus: "pending" } : checkpoint,
+              ),
+            }
+          : team,
+      ),
+    )
+  }
+
   // Calculate leaderboard
   const leaderboard = [...teams]
     .filter((t) => !t.disqualified)
     .sort((a, b) => b.currentPosition - a.currentPosition || a.totalTime - b.totalTime)
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
       <Navbar role="superadmin" />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -291,6 +348,7 @@ export default function SuperAdminDashboard() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-gray-900">Teams</h2>
               <button
+                type="button"
                 onClick={() => setShowNewTeamModal(true)}
                 className="px-4 py-2 bg-gray-800 text-white rounded font-medium hover:bg-gray-700 transition-colors"
               >
@@ -420,6 +478,92 @@ export default function SuperAdminDashboard() {
                       </button>
                     </div>
                   )}
+
+                  {/* Checkpoints Section */}
+                  {team.checkpoints && team.checkpoints.length > 0 && (
+                    <div className="mt-4 bg-gray-50 p-3 rounded">
+                      <p className="text-sm font-semibold text-gray-700 mb-3">Checkpoints History</p>
+                      <div className="space-y-2">
+                        {team.checkpoints.map((checkpoint, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-white p-3 rounded border border-gray-200"
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-gray-700">
+                                Checkpoint {checkpoint.position}
+                              </span>
+                              
+                              {/* Checkpoint Status */}
+                              <div className="flex items-center gap-2">
+                                {checkpoint.checkpointApproved ? (
+                                  <>
+                                    <span className="text-xs text-green-600 font-medium">✓ Approved</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleUndoCheckpointApproval(team.id, idx)}
+                                      className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                    >
+                                      Undo
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className="text-xs text-yellow-600 font-medium">⏳ Pending Approval</span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Question Info (if checkpoint is approved) */}
+                            {checkpoint.checkpointApproved && checkpoint.questionAssigned && (
+                              <div className="mt-2 pt-2 border-t border-gray-100">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-xs text-gray-600">
+                                    Question: <span className="font-medium text-gray-800">{checkpoint.questionId}</span>
+                                  </span>
+
+                                  {/* Answer Status */}
+                                  <div className="flex items-center gap-2">
+                                    {checkpoint.answerStatus === "correct" ? (
+                                      <>
+                                        <span className="text-xs text-green-600 font-medium">✓ Correct</span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleUndoQuestionAnswer(team.id, idx)}
+                                          className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                        >
+                                          Undo
+                                        </button>
+                                      </>
+                                    ) : checkpoint.answerStatus === "incorrect" ? (
+                                      <>
+                                        <span className="text-xs text-red-600 font-medium">✗ Incorrect</span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleUndoQuestionAnswer(team.id, idx)}
+                                          className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                        >
+                                          Undo
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <span className="text-xs text-yellow-600 font-medium">⏳ Pending Answer</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* No question assigned yet */}
+                            {checkpoint.checkpointApproved && !checkpoint.questionAssigned && (
+                              <div className="mt-2 pt-2 border-t border-gray-100">
+                                <span className="text-xs text-gray-500">No question assigned yet</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -431,6 +575,7 @@ export default function SuperAdminDashboard() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-gray-900">Question Bank</h2>
               <button
+                type="button"
                 onClick={() => setShowNewQuestionModal(true)}
                 className="px-4 py-2 bg-gray-800 text-white rounded font-medium hover:bg-gray-700 transition-colors"
               >
@@ -535,7 +680,7 @@ export default function SuperAdminDashboard() {
 
       {/* Create Team Modal */}
       {showNewTeamModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" style={{ zIndex: 9999 }}>
           <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Create New Team</h3>
 
@@ -594,7 +739,7 @@ export default function SuperAdminDashboard() {
 
       {/* Add Question Modal */}
       {showNewQuestionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" style={{ zIndex: 9999 }}>
           <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Add New Question</h3>
 
