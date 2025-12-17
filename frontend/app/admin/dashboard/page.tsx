@@ -11,7 +11,13 @@ interface Team {
   currentRoom: number
   status: "active" | "completed"
   totalTime: number
-  checkpoints: Array<{ position: number; questionId: string; approved: boolean }>
+  checkpoints: Array<{
+    position: number
+    checkpointApproved: boolean
+    questionId: string | null
+    questionAssigned: boolean
+    answerStatus: "pending" | "correct" | "incorrect" | null
+  }>
 }
 
 export default function AdminDashboard() {
@@ -25,8 +31,9 @@ export default function AdminDashboard() {
       status: "active",
       totalTime: 1200,
       checkpoints: [
-        { position: 1, questionId: "Q001", approved: true },
-        { position: 6, questionId: "Q002", approved: false },
+        { position: 1, checkpointApproved: true, questionId: "Q001", questionAssigned: true, answerStatus: "correct" },
+        { position: 6, checkpointApproved: true, questionId: "Q002", questionAssigned: true, answerStatus: "pending" },
+        { position: 12, checkpointApproved: false, questionId: null, questionAssigned: false, answerStatus: null },
       ],
     },
     {
@@ -36,14 +43,16 @@ export default function AdminDashboard() {
       currentRoom: 2,
       status: "active",
       totalTime: 900,
-      checkpoints: [{ position: 1, questionId: "Q003", approved: true }],
+      checkpoints: [
+        { position: 1, checkpointApproved: true, questionId: "Q003", questionAssigned: true, answerStatus: "correct" },
+        { position: 5, checkpointApproved: true, questionId: null, questionAssigned: false, answerStatus: null },
+      ],
     },
   ])
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
   const [showQuestionModal, setShowQuestionModal] = useState(false)
-  const [selectedQuestionPosition, setSelectedQuestionPosition] = useState<number | null>(null)
+  const [selectedCheckpointIndex, setSelectedCheckpointIndex] = useState<number | null>(null)
   const [selectedQuestion, setSelectedQuestion] = useState("")
-  const [isCorrect, setIsCorrect] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
@@ -55,33 +64,7 @@ export default function AdminDashboard() {
 
   const questions = ["Q001", "Q002", "Q003", "Q004", "Q005", "Q006", "Q007", "Q008", "Q009", "Q010"]
 
-  const handleAssignQuestion = () => {
-    if (!selectedTeam || !selectedQuestionPosition || !selectedQuestion) return
-
-    setTeams((prev) =>
-      prev.map((team) =>
-        team.id === selectedTeam.id
-          ? {
-              ...team,
-              checkpoints: [
-                ...team.checkpoints,
-                {
-                  position: selectedQuestionPosition,
-                  questionId: selectedQuestion,
-                  approved: isCorrect,
-                },
-              ],
-            }
-          : team,
-      ),
-    )
-
-    setShowQuestionModal(false)
-    setSelectedQuestion("")
-    setIsCorrect(false)
-    setSelectedQuestionPosition(null)
-  }
-
+  // Step 1: Approve checkpoint (team has reached the checkpoint)
   const handleApproveCheckpoint = (teamId: string, checkpointIndex: number) => {
     setTeams((prev) =>
       prev.map((team) =>
@@ -89,7 +72,50 @@ export default function AdminDashboard() {
           ? {
               ...team,
               checkpoints: team.checkpoints.map((checkpoint, idx) =>
-                idx === checkpointIndex ? { ...checkpoint, approved: true } : checkpoint,
+                idx === checkpointIndex ? { ...checkpoint, checkpointApproved: true } : checkpoint,
+              ),
+            }
+          : team,
+      ),
+    )
+  }
+
+  // Step 2: Assign question (only after checkpoint is approved)
+  const handleAssignQuestion = () => {
+    if (!selectedTeam || selectedCheckpointIndex === null || !selectedQuestion) return
+
+    setTeams((prev) =>
+      prev.map((team) =>
+        team.id === selectedTeam.id
+          ? {
+              ...team,
+              checkpoints: team.checkpoints.map((checkpoint, idx) =>
+                idx === selectedCheckpointIndex
+                  ? { ...checkpoint, questionId: selectedQuestion, questionAssigned: true, answerStatus: "pending" }
+                  : checkpoint,
+              ),
+            }
+          : team,
+      ),
+    )
+
+    setShowQuestionModal(false)
+    setSelectedQuestion("")
+    setSelectedCheckpointIndex(null)
+    setSelectedTeam(null)
+  }
+
+  // Step 3: Mark answer as correct or incorrect
+  const handleMarkAnswer = (teamId: string, checkpointIndex: number, isCorrect: boolean) => {
+    setTeams((prev) =>
+      prev.map((team) =>
+        team.id === teamId
+          ? {
+              ...team,
+              checkpoints: team.checkpoints.map((checkpoint, idx) =>
+                idx === checkpointIndex
+                  ? { ...checkpoint, answerStatus: isCorrect ? "correct" : "incorrect" }
+                  : checkpoint,
               ),
             }
           : team,
@@ -152,24 +178,75 @@ export default function AdminDashboard() {
                     team.checkpoints.map((checkpoint, idx) => (
                       <div
                         key={idx}
-                        className="flex justify-between items-center text-sm bg-white p-2 rounded border border-gray-200"
+                        className="bg-white p-3 rounded border border-gray-200"
                       >
-                        <span className="text-gray-700">
-                          Checkpoint {checkpoint.position} → {checkpoint.questionId}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className={`font-bold ${checkpoint.approved ? "text-green-600" : "text-yellow-600"}`}>
-                            {checkpoint.approved ? "✓ Approved" : "⏳ Pending"}
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-gray-700">
+                            Checkpoint {checkpoint.position}
                           </span>
-                          {!checkpoint.approved && (
+                          
+                          {/* Step 1: Checkpoint Approval Status */}
+                          {!checkpoint.checkpointApproved ? (
                             <button
                               onClick={() => handleApproveCheckpoint(team.id, idx)}
-                              className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
+                              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors font-medium"
                             >
-                              Approve
+                              Approve Checkpoint
                             </button>
+                          ) : (
+                            <span className="text-xs text-green-600 font-medium">✓ Checkpoint Approved</span>
                           )}
                         </div>
+
+                        {/* Step 2: Question Assignment (only show if checkpoint is approved) */}
+                        {checkpoint.checkpointApproved && (
+                          <div className="mt-2 pt-2 border-t border-gray-100">
+                            {!checkpoint.questionAssigned ? (
+                              <button
+                                onClick={() => {
+                                  setSelectedTeam(team)
+                                  setSelectedCheckpointIndex(idx)
+                                  setShowQuestionModal(true)
+                                }}
+                                className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                              >
+                                Assign Question
+                              </button>
+                            ) : (
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs text-gray-600">
+                                  Question: <span className="font-medium text-gray-800">{checkpoint.questionId}</span>
+                                </span>
+
+                                {/* Step 3: Mark Answer (only show if question is assigned) */}
+                                {checkpoint.answerStatus === "pending" ? (
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={() => handleMarkAnswer(team.id, idx, true)}
+                                      className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors font-medium"
+                                    >
+                                      ✓ Correct
+                                    </button>
+                                    <button
+                                      onClick={() => handleMarkAnswer(team.id, idx, false)}
+                                      className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors font-medium"
+                                    >
+                                      ✗ Incorrect
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <span
+                                    className={`text-xs font-medium ${
+                                      checkpoint.answerStatus === "correct" ? "text-green-600" : "text-red-600"
+                                    }`}
+                                  >
+                                    {checkpoint.answerStatus === "correct" ? "✓ Correct" : "✗ Incorrect"}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ))
                   ) : (
@@ -178,15 +255,32 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Assign Question Button */}
+              {/* Add New Checkpoint Button */}
               <button
                 onClick={() => {
-                  setSelectedTeam(team)
-                  setShowQuestionModal(true)
+                  setTeams((prev) =>
+                    prev.map((t) =>
+                      t.id === team.id
+                        ? {
+                            ...t,
+                            checkpoints: [
+                              ...t.checkpoints,
+                              {
+                                position: t.checkpoints.length + 1,
+                                checkpointApproved: false,
+                                questionId: null,
+                                questionAssigned: false,
+                                answerStatus: null,
+                              },
+                            ],
+                          }
+                        : t,
+                    ),
+                  )
                 }}
                 className="w-full px-4 py-2 bg-gray-800 text-white rounded font-medium hover:bg-gray-700 transition-colors text-sm"
               >
-                Assign Question
+                + Add New Checkpoint
               </button>
             </div>
           ))}
@@ -194,23 +288,14 @@ export default function AdminDashboard() {
       </main>
 
       {/* Question Modal */}
-      {showQuestionModal && selectedTeam && (
+      {showQuestionModal && selectedTeam && selectedCheckpointIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Assign Question to {selectedTeam.id}</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
+              Assign Question to {selectedTeam.id} - Checkpoint {selectedTeam.checkpoints[selectedCheckpointIndex]?.position}
+            </h3>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Checkpoint Position</label>
-                <input
-                  type="number"
-                  value={selectedQuestionPosition || ""}
-                  onChange={(e) => setSelectedQuestionPosition(Number(e.target.value))}
-                  placeholder="e.g., 6"
-                  className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
-                />
-              </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Select Question</label>
                 <select
@@ -226,24 +311,16 @@ export default function AdminDashboard() {
                   ))}
                 </select>
               </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="correct"
-                  checked={isCorrect}
-                  onChange={(e) => setIsCorrect(e.target.checked)}
-                  className="rounded border-gray-300 text-gray-800 focus:ring-gray-600"
-                />
-                <label htmlFor="correct" className="ml-2 text-sm text-gray-700">
-                  Mark as Correct
-                </label>
-              </div>
             </div>
 
             <div className="flex gap-3 mt-6">
               <button
-                onClick={() => setShowQuestionModal(false)}
+                onClick={() => {
+                  setShowQuestionModal(false)
+                  setSelectedQuestion("")
+                  setSelectedCheckpointIndex(null)
+                  setSelectedTeam(null)
+                }}
                 className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded font-medium text-sm hover:bg-gray-300 transition-colors"
               >
                 Cancel

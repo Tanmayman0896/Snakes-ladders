@@ -266,7 +266,7 @@ export default function SuperAdminDashboard() {
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Rank</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Team ID</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Position</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Room</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Points</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Time (sec)</th>
                   </tr>
                 </thead>
@@ -329,7 +329,7 @@ export default function SuperAdminDashboard() {
                       <p className="font-bold text-gray-900">{team.currentPosition}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600 uppercase">Room</p>
+                      <p className="text-xs text-gray-600 uppercase">Points</p>
                       <p className="font-bold text-gray-900">{team.currentRoom}</p>
                     </div>
                     <div>
