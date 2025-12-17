@@ -44,6 +44,7 @@ export default function AdminDashboard() {
   const [selectedQuestionPosition, setSelectedQuestionPosition] = useState<number | null>(null)
   const [selectedQuestion, setSelectedQuestion] = useState("")
   const [isCorrect, setIsCorrect] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
     const userRole = localStorage.getItem("userRole")
@@ -103,9 +104,22 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Team Management</h2>
 
+        {/* Search Bar */}
+        <div className="mb-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by Team ID..."
+            className="w-full max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+          />
+        </div>
+
         {/* Teams List */}
         <div className="space-y-4">
-          {teams.map((team) => (
+          {teams
+            .filter((team) => team.id.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map((team) => (
             <div key={team.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
                 <div>

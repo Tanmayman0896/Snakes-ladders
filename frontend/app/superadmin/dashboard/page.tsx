@@ -19,6 +19,15 @@ interface Question {
   difficulty: "easy" | "medium" | "hard"
 }
 
+interface ActivityLog {
+  id: string
+  userId: string
+  userRole: "admin" | "superadmin" | "participant"
+  action: string
+  details: string
+  timestamp: string
+}
+
 export default function SuperAdminDashboard() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("leaderboard")
@@ -62,6 +71,65 @@ export default function SuperAdminDashboard() {
   const [newQuestionDifficulty, setNewQuestionDifficulty] = useState<"easy" | "medium" | "hard">("medium")
   const [selectedTeamForEdit, setSelectedTeamForEdit] = useState<string | null>(null)
   const [newRoom, setNewRoom] = useState("")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([
+    {
+      id: "LOG001",
+      userId: "SUPER001",
+      userRole: "superadmin",
+      action: "Login",
+      details: "SuperAdmin logged in",
+      timestamp: "2025-12-17 10:30:00",
+    },
+    {
+      id: "LOG002",
+      userId: "ADMIN001",
+      userRole: "admin",
+      action: "Login",
+      details: "Admin logged in",
+      timestamp: "2025-12-17 10:35:00",
+    },
+    {
+      id: "LOG003",
+      userId: "ADMIN001",
+      userRole: "admin",
+      action: "Update",
+      details: "Approved checkpoint for TEAM001",
+      timestamp: "2025-12-17 10:40:00",
+    },
+    {
+      id: "LOG004",
+      userId: "SUPER001",
+      userRole: "superadmin",
+      action: "Create",
+      details: "Created new team TEAM003",
+      timestamp: "2025-12-17 10:45:00",
+    },
+    {
+      id: "LOG005",
+      userId: "TEAM001",
+      userRole: "participant",
+      action: "Login",
+      details: "Participant TEAM001 logged in",
+      timestamp: "2025-12-17 11:00:00",
+    },
+    {
+      id: "LOG006",
+      userId: "ADMIN001",
+      userRole: "admin",
+      action: "Update",
+      details: "Assigned question Q002 to TEAM002",
+      timestamp: "2025-12-17 11:15:00",
+    },
+    {
+      id: "LOG007",
+      userId: "SUPER001",
+      userRole: "superadmin",
+      action: "Update",
+      details: "Changed room for TEAM001 to Room 3",
+      timestamp: "2025-12-17 11:20:00",
+    },
+  ])
 
   useEffect(() => {
     const userRole = localStorage.getItem("userRole")
@@ -158,6 +226,16 @@ export default function SuperAdminDashboard() {
           >
             Questions
           </button>
+          <button
+            onClick={() => setActiveTab("activity")}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === "activity"
+                ? "text-gray-900 border-b-2 border-gray-900"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Activity Log
+          </button>
         </div>
 
         {activeTab === "leaderboard" && (
@@ -205,8 +283,21 @@ export default function SuperAdminDashboard() {
               </button>
             </div>
 
+            {/* Search Bar */}
+            <div className="mb-4">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by Team ID..."
+                className="w-full max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+              />
+            </div>
+
             <div className="space-y-3">
-              {teams.map((team) => (
+              {teams
+                .filter((team) => team.id.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((team) => (
                 <div
                   key={team.id}
                   className={`border rounded-lg p-4 ${
@@ -337,6 +428,65 @@ export default function SuperAdminDashboard() {
                   </button>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "activity" && (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-900">Activity Log</h2>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Timestamp</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">User ID</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Role</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Action</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Details</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {activityLogs
+                    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                    .map((log) => (
+                      <tr key={log.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-sm text-gray-600">{log.timestamp}</td>
+                        <td className="px-4 py-3 text-sm text-gray-900 font-medium">{log.userId}</td>
+                        <td className="px-4 py-3 text-sm">
+                          <span
+                            className={`px-2 py-1 rounded text-xs font-medium ${
+                              log.userRole === "superadmin"
+                                ? "bg-purple-100 text-purple-700"
+                                : log.userRole === "admin"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : "bg-green-100 text-green-700"
+                            }`}
+                          >
+                            {log.userRole}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <span
+                            className={`px-2 py-1 rounded text-xs font-medium ${
+                              log.action === "Login"
+                                ? "bg-gray-100 text-gray-700"
+                                : log.action === "Create"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-yellow-100 text-yellow-700"
+                            }`}
+                          >
+                            {log.action}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{log.details}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
