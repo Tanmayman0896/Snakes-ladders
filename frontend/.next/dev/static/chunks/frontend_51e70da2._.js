@@ -22,10 +22,17 @@ function Home() {
         "Home.useEffect": ()=>{
             // Check if user is already logged in
             const userRole = localStorage.getItem("userRole");
-            if (userRole === "admin") {
-                router.push("/admin/dashboard");
-            } else if (userRole === "superadmin") {
-                router.push("/superadmin/dashboard");
+            const token = localStorage.getItem("token");
+            if (token && userRole) {
+                if (userRole === "admin") {
+                    router.push("/admin/dashboard");
+                } else if (userRole === "superadmin") {
+                    router.push("/superadmin/dashboard");
+                } else if (userRole === "participant") {
+                    router.push("/participant/dashboard");
+                } else {
+                    router.push("/login");
+                }
             } else {
                 router.push("/login");
             }
@@ -44,17 +51,17 @@ function Home() {
                     children: "Loading..."
                 }, void 0, false, {
                     fileName: "[project]/frontend/app/page.tsx",
-                    lineNumber: 27,
+                    lineNumber: 35,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/frontend/app/page.tsx",
-                lineNumber: 26,
+                lineNumber: 34,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/frontend/app/page.tsx",
-            lineNumber: 25,
+            lineNumber: 33,
             columnNumber: 7
         }, this);
     }

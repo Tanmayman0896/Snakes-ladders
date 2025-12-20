@@ -3,126 +3,106 @@ const { hashPassword, comparePassword } = require('../../utils/password.util');
 const { generateToken } = require('../../middlewares/session.middleware');
 const { ROLES } = require('../../config/constants');
 
+ //login for all user types
 
-const loginParticipant = async (teamCode, password) => {
-  const team = await prisma.team.findUnique({
-    where: { teamCode },
+const login = async (username, password) => {
+  const user = await prisma.user.findUnique({
+    where: { username },
     include: {
-      login: true,
-      members: true,
+      team: {
+        include: {
+          members: true,
+        },
+      },
     },
   });
 
-  if (!team || !team.login) {
+  if (!user) {
     throw new Error('Invalid credentials');
   }
 
-  const isValidPassword = await comparePassword(password, team.login.password);
+  const isValidPassword = await comparePassword(password, user.password);
   if (!isValidPassword) {
     throw new Error('Invalid credentials');
   }
 
-  if (team.status === 'DISQUALIFIED') {
+  // Check if participant team is disqualified
+  if (user.role === 'PARTICIPANT' && user.team?.status === 'DISQUALIFIED') {
     throw new Error('Team has been disqualified');
   }
 
-  const token = generateToken({
-    teamId: team.id,
-    teamCode: team.teamCode,
-    role: ROLES.PARTICIPANT,
-  });
+  const tokenPayload = {
+    userId: user.id,
+    username: user.username,
+    role: user.role.toLowerCase(),
+  };
 
-  return {
+  // Add team info for participants
+  if (user.role === 'PARTICIPANT' && user.team) {
+    tokenPayload.teamId = user.team.id;
+    tokenPayload.teamCode = user.team.teamCode;
+  }
+
+  const token = generateToken(tokenPayload);
+
+  const response = {
     token,
-    team: {
-      id: team.id,
-      teamCode: team.teamCode,
-      teamName: team.teamName,
-      currentPosition: team.currentPosition,
-      currentRoom: team.currentRoom,
-      status: team.status,
-      members: team.members,
+    user: {
+      id: user.id,
+      username: user.username,
+      role: user.role.toLowerCase(),
     },
   };
+
+  // Add team details for participants
+  if (user.role === 'PARTICIPANT' && user.team) {
+    response.team = {
+      id: user.team.id,
+      teamCode: user.team.teamCode,
+      teamName: user.team.teamName,
+      currentPosition: user.team.currentPosition,
+      currentRoom: user.team.currentRoom,
+      status: user.team.status,
+      members: user.team.members,
+    };
+  }
+
+  return response;
 };
 
-const loginAdmin = async (username, password) => {
-  const admin = await prisma.adminLogin.findUnique({
-    where: { username },
-  });
 
-  if (!admin) {
-    throw new Error('Invalid credentials');
-  }
-
-  const isValidPassword = await comparePassword(password, admin.password);
-  if (!isValidPassword) {
-    throw new Error('Invalid credentials');
-  }
-
-  const token = generateToken({
-    adminId: admin.id,
-    username: admin.username,
-    role: ROLES.ADMIN,
-  });
-
-  return {
-    token,
-    admin: {
-      id: admin.id,
-      username: admin.username,
-    },
-  };
-};
-
-const loginSuperadmin = async (username, password) => {
-  const superadmin = await prisma.superAdminLogin.findUnique({
-    where: { username },
-  });
-
-  if (!superadmin) {
-    throw new Error('Invalid credentials');
-  }
-
-  const isValidPassword = await comparePassword(password, superadmin.password);
-  if (!isValidPassword) {
-    throw new Error('Invalid credentials');
-  }
-
-  const token = generateToken({
-    superadminId: superadmin.id,
-    username: superadmin.username,
-    role: ROLES.SUPERADMIN,
-  });
-
-  return {
-    token,
-    superadmin: {
-      id: superadmin.id,
-      username: superadmin.username,
-    },
-  };
-};
-
-const createAdmin = async (username, password) => {
+const createUser = async (username, password, role, teamId = null) => {
   const hashedPassword = await hashPassword(password);
 
-  const admin = await prisma.adminLogin.create({
-    data: {
-      username,
-      password: hashedPassword,
-    },
+  const userData = {
+    username,
+    password: hashedPassword,
+    role: role.toUpperCase(),
+  };
+
+  if (teamId) {
+    userData.teamId = teamId;
+  }
+
+  const user = await prisma.user.create({
+    data: userData,
   });
 
   return {
-    id: admin.id,
-    username: admin.username,
+    id: user.id,
+    username: user.username,
+    role: user.role,
   };
+};
+
+  //Create admin user (for backward compatibility)
+ 
+const createAdmin = async (username, password) => {
+  return createUser(username, password, 'ADMIN');
 };
 
 module.exports = {
-  loginParticipant,
-  loginAdmin,
-  loginSuperadmin,
+  login,
+  createUser,
   createAdmin,
 };

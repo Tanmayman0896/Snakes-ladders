@@ -37,29 +37,24 @@ enum BoardRuleType {
   LADDER
 }
 
-// LOGIN TABLES 
-
-model ParticipantLogin {
-  id        String   @id @default(uuid())
-  teamId    String   @unique
-  password  String
-  createdAt DateTime @default(now())
-
-  team      Team     @relation(fields: [teamId], references: [id])
+enum UserRole {
+  PARTICIPANT
+  ADMIN
+  SUPERADMIN
 }
 
-model AdminLogin {
+// LOGIN TABLE (Unified)
+
+model User {
   id        String   @id @default(uuid())
   username  String   @unique
   password  String
+  role      UserRole
+  teamId    String?  @unique
   createdAt DateTime @default(now())
-}
+  updatedAt DateTime @updatedAt
 
-model SuperAdminLogin {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  team      Team?    @relation(fields: [teamId], references: [id])
 }
 
 // TEAM MANAGEMENT
@@ -78,7 +73,7 @@ model Team {
   checkpoints     Checkpoint[]
   diceRolls       DiceRoll[]
   timeLogs        TimeLog[]
-  login           ParticipantLogin?
+  user            User?
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

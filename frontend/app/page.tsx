@@ -10,10 +10,18 @@ export default function Home() {
   useEffect(() => {
     // Check if user is already logged in
     const userRole = localStorage.getItem("userRole")
-    if (userRole === "admin") {
-      router.push("/admin/dashboard")
-    } else if (userRole === "superadmin") {
-      router.push("/superadmin/dashboard")
+    const token = localStorage.getItem("token")
+
+    if (token && userRole) {
+      if (userRole === "admin") {
+        router.push("/admin/dashboard")
+      } else if (userRole === "superadmin") {
+        router.push("/superadmin/dashboard")
+      } else if (userRole === "participant") {
+        router.push("/participant/dashboard")
+      } else {
+        router.push("/login")
+      }
     } else {
       router.push("/login")
     }
