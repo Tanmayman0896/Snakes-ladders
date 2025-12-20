@@ -1,7 +1,7 @@
 const prisma = require('../../prisma/client');
 const { processDiceRoll } = require('./dice.service');
 const { approveCheckpoint, handleSnakeDodge } = require('./checkpoint.service');
-const { getBoardState } = require('./board.service');
+const { getBoardStateForTeam } = require('./board.service');
 
 const initializeTeam = async (teamId) => {
   return await prisma.team.update({
@@ -36,6 +36,7 @@ const getGameState = async (teamId) => {
     where: { id: teamId },
     include: {
       members: true,
+      map: true,
       checkpoints: {
         include: {
           questionAssign: {
@@ -60,7 +61,7 @@ const getGameState = async (teamId) => {
     throw new Error('Team not found');
   }
 
-  const boardState = await getBoardState();
+  const boardState = await getBoardStateForTeam(teamId);
 
   return {
     team: {
@@ -73,6 +74,8 @@ const getGameState = async (teamId) => {
       status: team.status,
       canRollDice: team.canRollDice,
       members: team.members,
+      mapId: team.mapId,
+      mapName: team.map?.name || null,
     },
     latestCheckpoint: team.checkpoints[0] || null,
     boardState,

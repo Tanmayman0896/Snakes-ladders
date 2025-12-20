@@ -1,6 +1,6 @@
 const prisma = require('../../prisma/client');
 const { GAME_CONFIG } = require('../../config/constants');
-const { getSnakeEndPosition } = require('./board.service');
+const { getSnakeEndPositionForTeam } = require('./board.service');
 
 
 const getTeamCheckpoints = async (teamId) => {
@@ -89,8 +89,8 @@ const handleSnakeDodge = async (checkpointId, success) => {
       message: 'Snake dodged successfully!',
     };
   } else {
-    // Dodge failed - apply penalty and move to snake end
-    const snakeEndPos = await getSnakeEndPosition(checkpoint.positionAfter);
+    // Dodge failed - apply penalty and move to snake end (using team's map)
+    const snakeEndPos = await getSnakeEndPositionForTeam(checkpoint.teamId, checkpoint.positionAfter);
 
     // Add time penalty
     await prisma.timeLog.create({

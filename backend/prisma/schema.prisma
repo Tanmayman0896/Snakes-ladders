@@ -68,12 +68,14 @@ model Team {
   totalTimeSec    Int        @default(0)
   status          TeamStatus @default(ACTIVE)
   canRollDice     Boolean    @default(true)
+  mapId           String?
   
   members         TeamMember[]
   checkpoints     Checkpoint[]
   diceRolls       DiceRoll[]
   timeLogs        TimeLog[]
   user            User?
+  map             BoardMap?  @relation(fields: [mapId], references: [id])
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -148,13 +150,29 @@ model QuestionAssignment {
   question     Question   @relation(fields: [questionId], references: [id])
 }
 
-// BOARD RULES (SNAKES & LADDERS)
+// BOARD MAPS & RULES (SNAKES & LADDERS)
+
+model BoardMap {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  isActive  Boolean     @default(true)
+  rules     BoardRule[]
+  teams     Team[]
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
 
 model BoardRule {
   id       String        @id @default(uuid())
+  mapId    String
   type     BoardRuleType
-  startPos Int           @unique
+  startPos Int
   endPos   Int
+  
+  map      BoardMap      @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  
+  @@unique([mapId, startPos])
 }
 
 // TIMER & PENALTIES

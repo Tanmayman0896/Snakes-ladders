@@ -1,6 +1,6 @@
 const prisma = require('../../prisma/client');
 const { rollDice, calculateNewPosition, getRandomRoom, hasReachedGoal } = require('./game.utils');
-const { checkSnake } = require('./board.service');
+const { checkSnakeForTeam } = require('./board.service');
 const { GAME_CONFIG } = require('../../config/constants');
 
 /**
@@ -14,11 +14,16 @@ const processDiceRoll = async (teamId) => {
       currentPosition: true,
       currentRoom: true,
       status: true,
+      mapId: true,
     },
   });
 
   if (!team) {
     throw new Error('Team not found');
+  }
+
+  if (!team.mapId) {
+    throw new Error('Team has no board map assigned');
   }
 
   // Roll the dice
@@ -34,8 +39,8 @@ const processDiceRoll = async (teamId) => {
   // Get new room (different from current)
   const newRoom = getRandomRoom(team.currentRoom);
 
-  // Check if landed on snake
-  const snake = await checkSnake(positionAfter);
+  // Check if landed on snake (using team's specific map)
+  const snake = await checkSnakeForTeam(teamId, positionAfter);
   const isSnakePosition = snake !== null;
 
   // Record the dice roll

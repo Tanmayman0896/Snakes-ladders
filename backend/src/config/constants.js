@@ -3,13 +3,16 @@ const GAME_CONFIG = {
   BOARD_SIZE: 100,
   DICE_MIN: 1,
   DICE_MAX: 6,
-  TOTAL_ROOMS: 8,
+  TOTAL_ROOMS: 10,
+  TOTAL_TEAMS: 50,
+  TEAMS_PER_ROOM: 5,
+  TOTAL_MAPS: 5,
   SNAKE_PENALTY_SECONDS: 180, // 3 minutes in seconds
   STARTING_POSITION: 1,
 };
 
-// Room numbers (1-8)
-const ROOMS = [1, 2, 3, 4, 5, 6, 7, 8];
+// Room numbers (1-10)
+const ROOMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Roles for authentication
 const ROLES = {
