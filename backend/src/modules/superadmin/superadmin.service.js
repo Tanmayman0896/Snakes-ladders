@@ -3,9 +3,6 @@ const { hashPassword } = require('../../utils/password.util');
 const { generateTeamCode } = require('../../utils/random.util');
 const { GAME_CONFIG, ROOMS } = require('../../config/constants');
 
-/**
- * Create a new team
- */
 const createTeam = async (teamName, members, password) => {
   const teamCode = generateTeamCode();
   const hashedPassword = await hashPassword(password);
@@ -43,9 +40,7 @@ const createTeam = async (teamName, members, password) => {
   return { ...team, generatedPassword: password };
 };
 
-/**
- * Update team password
- */
+
 const updateTeamPassword = async (teamId, newPassword) => {
   const hashedPassword = await hashPassword(newPassword);
   
@@ -55,9 +50,6 @@ const updateTeamPassword = async (teamId, newPassword) => {
   });
 };
 
-/**
- * Disqualify a team
- */
 const disqualifyTeam = async (teamId) => {
   return await prisma.team.update({
     where: { id: teamId },
@@ -65,9 +57,7 @@ const disqualifyTeam = async (teamId) => {
   });
 };
 
-/**
- * Reinstate a disqualified team
- */
+
 const reinstateTeam = async (teamId) => {
   return await prisma.team.update({
     where: { id: teamId },
@@ -75,9 +65,8 @@ const reinstateTeam = async (teamId) => {
   });
 };
 
-/**
- * Change team room
- */
+//Change team room
+
 const changeTeamRoom = async (teamId, newRoom) => {
   if (!ROOMS.includes(newRoom)) {
     throw new Error('Invalid room number');
@@ -89,9 +78,6 @@ const changeTeamRoom = async (teamId, newRoom) => {
   });
 };
 
-/**
- * Adjust team timer
- */
 const adjustTeamTimer = async (teamId, secondsToAdd, reason) => {
   const team = await prisma.team.update({
     where: { id: teamId },
@@ -112,9 +98,6 @@ const adjustTeamTimer = async (teamId, secondsToAdd, reason) => {
   return team;
 };
 
-/**
- * Set team timer to specific value
- */
 const setTeamTimer = async (teamId, totalSeconds, reason) => {
   const currentTeam = await prisma.team.findUnique({
     where: { id: teamId },
@@ -140,9 +123,6 @@ const setTeamTimer = async (teamId, totalSeconds, reason) => {
   return team;
 };
 
-/**
- * Undo checkpoint
- */
 const undoCheckpoint = async (checkpointId) => {
   const checkpoint = await prisma.checkpoint.findUnique({
     where: { id: checkpointId },
@@ -194,9 +174,6 @@ const undoCheckpoint = async (checkpointId) => {
   };
 };
 
-/**
- * Get all teams with full details
- */
 const getAllTeamsWithDetails = async () => {
   return await prisma.team.findMany({
     include: {
@@ -220,9 +197,6 @@ const getAllTeamsWithDetails = async () => {
   });
 };
 
-/**
- * Create admin account
- */
 const createAdmin = async (username, password) => {
   const hashedPassword = await hashPassword(password);
 
@@ -234,18 +208,12 @@ const createAdmin = async (username, password) => {
   });
 };
 
-/**
- * Delete admin account
- */
 const deleteAdmin = async (adminId) => {
   return await prisma.adminLogin.delete({
     where: { id: adminId },
   });
 };
 
-/**
- * Get all admins
- */
 const getAllAdmins = async () => {
   return await prisma.adminLogin.findMany({
     select: {
@@ -256,9 +224,6 @@ const getAllAdmins = async () => {
   });
 };
 
-/**
- * Add snake to board
- */
 const addSnake = async (startPos, endPos) => {
   if (startPos <= endPos) {
     throw new Error('Snake start position must be greater than end position');
@@ -273,18 +238,12 @@ const addSnake = async (startPos, endPos) => {
   });
 };
 
-/**
- * Remove snake from board
- */
 const removeSnake = async (snakeId) => {
   return await prisma.boardRule.delete({
     where: { id: snakeId },
   });
 };
 
-/**
- * Get all board rules
- */
 const getAllBoardRules = async () => {
   return await prisma.boardRule.findMany({
     orderBy: { startPos: 'asc' },
