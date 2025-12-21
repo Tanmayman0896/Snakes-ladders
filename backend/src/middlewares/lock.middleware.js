@@ -2,9 +2,6 @@ const prisma = require('../prisma/client');
 const { MESSAGES } = require('../config/constants');
 const { sendBadRequest } = require('../utils/response.util');
 
-/**
- * Check if team can roll dice (no pending checkpoint)
- */
 const checkDiceLock = async (req, res, next) => {
   try {
     const teamId = req.user.teamId;
@@ -41,9 +38,6 @@ const checkDiceLock = async (req, res, next) => {
   }
 };
 
-/**
- * Check if team is active (not disqualified or completed)
- */
 const checkTeamActive = async (req, res, next) => {
   try {
     const teamId = req.user.teamId;
@@ -71,3 +65,4 @@ module.exports = {
   checkDiceLock,
   checkTeamActive,
 };
+

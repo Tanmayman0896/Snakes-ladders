@@ -1,9 +1,6 @@
 const { ROLES, MESSAGES } = require('../config/constants');
 const { sendForbidden } = require('../utils/response.util');
 
-/**
- * Check if user has required role
- */
 const requireRole = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -18,24 +15,16 @@ const requireRole = (...allowedRoles) => {
   };
 };
 
-/**
- * Participant only middleware
- */
+// Participant only middleware
 const participantOnly = requireRole(ROLES.PARTICIPANT);
 
-/**
- * Admin only middleware
- */
+// Admin only middleware
 const adminOnly = requireRole(ROLES.ADMIN);
 
-/**
- * Superadmin only middleware
- */
+// Superadmin only middleware
 const superadminOnly = requireRole(ROLES.SUPERADMIN);
 
-/**
- * Admin or Superadmin middleware
- */
+// Admin or Superadmin middleware
 const adminOrSuperadmin = requireRole(ROLES.ADMIN, ROLES.SUPERADMIN);
 
 module.exports = {
@@ -45,3 +34,4 @@ module.exports = {
   superadminOnly,
   adminOrSuperadmin,
 };
+

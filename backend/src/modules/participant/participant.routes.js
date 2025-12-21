@@ -29,3 +29,4 @@ router.get('/board', participantController.getBoard);
 router.get('/leaderboard', participantController.getLeaderboardData);
 
 module.exports = router;
+

@@ -19,3 +19,4 @@ for (const envVar of requiredEnvVars) {
 }
 
 module.exports = env;
+

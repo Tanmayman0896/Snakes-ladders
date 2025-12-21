@@ -3,9 +3,6 @@ const { rollDice, calculateNewPosition, getRandomRoom, hasReachedGoal } = requir
 const { checkSnakeForTeam } = require('./board.service');
 const { GAME_CONFIG } = require('../../config/constants');
 
-/**
- * Process dice roll for a team
- */
 const processDiceRoll = async (teamId) => {
   // Get current team state
   const team = await prisma.team.findUnique({
@@ -96,9 +93,6 @@ const processDiceRoll = async (teamId) => {
   };
 };
 
-/**
- * Get dice roll history for a team
- */
 const getDiceRollHistory = async (teamId) => {
   return await prisma.diceRoll.findMany({
     where: { teamId },
@@ -110,3 +104,4 @@ module.exports = {
   processDiceRoll,
   getDiceRollHistory,
 };
+

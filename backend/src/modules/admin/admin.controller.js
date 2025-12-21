@@ -124,3 +124,4 @@ module.exports = {
   getAvailableQuestions,
   getTeamProgress,
 };
+

@@ -54,3 +54,4 @@ router.post('/board/snakes', superadminController.addSnake);
 router.delete('/board/snakes/:snakeId', superadminController.removeSnake);
 
 module.exports = router;
+

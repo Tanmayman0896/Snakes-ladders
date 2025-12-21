@@ -22,3 +22,4 @@ router.post('/checkpoints/:checkpointId/mark', adminController.markQuestion);
 router.get('/questions/available', adminController.getAvailableQuestions);
 
 module.exports = router;
+

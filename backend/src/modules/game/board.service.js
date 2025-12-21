@@ -1,7 +1,5 @@
 const prisma = require('../../prisma/client');
 
-// ==================== BOARD MAP MANAGEMENT ====================
-
 const createBoardMap = async (name) => {
   return await prisma.boardMap.create({
     data: { name },
@@ -38,8 +36,6 @@ const deleteBoardMap = async (mapId) => {
     where: { id: mapId },
   });
 };
-
-// ==================== BOARD RULES (SNAKES/LADDERS) ====================
 
 const createBoardRule = async (mapId, type, startPos, endPos) => {
   return await prisma.boardRule.create({
@@ -208,3 +204,4 @@ module.exports = {
   // Legacy
   getBoardState,
 };
+

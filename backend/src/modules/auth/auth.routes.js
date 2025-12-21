@@ -12,3 +12,4 @@ router.post('/user/create', verifyToken, superadminOnly, authController.createUs
 router.post('/admin/create', verifyToken, superadminOnly, authController.createAdmin);
 
 module.exports = router;
+
