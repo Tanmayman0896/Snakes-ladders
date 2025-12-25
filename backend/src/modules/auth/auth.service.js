@@ -3,74 +3,9 @@ const { hashPassword, comparePassword } = require('../../utils/password.util');
 const { generateToken } = require('../../middlewares/session.middleware');
 const { ROLES } = require('../../config/constants');
 
-// Hardcoded test credentials
-const TEST_USERS = {
-  ADMIN001: {
-    password: 'admin123',
-    role: 'ADMIN',
-    id: 'admin-test-001',
-    username: 'ADMIN001',
-  },
-  SUPER001: {
-    password: 'super123',
-    role: 'SUPERADMIN',
-    id: 'super-test-001',
-    username: 'SUPER001',
-  },
-  TEAM001: {
-    password: 'team123',
-    role: 'PARTICIPANT',
-    id: 'team-test-001',
-    username: 'TEAM001',
-    team: {
-      id: 'test-team-001',
-      teamCode: 'TEAM001',
-      teamName: 'Test Team',
-      currentPosition: 1,
-      currentRoom: 1,
-      status: 'ACTIVE',
-      members: ['Member 1', 'Member 2'],
-    },
-  },
-};
-
-// login for all user types
+// login for all user types (only database users)
 const login = async (username, password) => {
-  // Check hardcoded test credentials first
-  const testUser = TEST_USERS[username];
-  if (testUser && testUser.password === password) {
-    const tokenPayload = {
-      userId: testUser.id,
-      username: testUser.username,
-      role: testUser.role.toLowerCase(),
-    };
-
-    // Add team info for participants
-    if (testUser.role === 'PARTICIPANT' && testUser.team) {
-      tokenPayload.teamId = testUser.team.id;
-      tokenPayload.teamCode = testUser.team.teamCode;
-    }
-
-    const token = generateToken(tokenPayload);
-
-    const response = {
-      token,
-      user: {
-        id: testUser.id,
-        username: testUser.username,
-        role: testUser.role.toLowerCase(),
-      },
-    };
-
-    // Add team details for participants
-    if (testUser.role === 'PARTICIPANT' && testUser.team) {
-      response.team = testUser.team;
-    }
-
-    return response;
-  }
-
-  // If not a test user, check database
+  // Check database for user
   const user = await prisma.user.findUnique({
     where: { username },
     include: {
