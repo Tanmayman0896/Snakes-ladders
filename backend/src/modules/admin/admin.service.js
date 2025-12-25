@@ -176,6 +176,18 @@ const getTeamProgress = async (teamId) => {
   });
 };
 
+// Approve a checkpoint (team has physically reached the checkpoint)
+const approveCheckpoint = async (checkpointId) => {
+  return await prisma.checkpoint.update({
+    where: { id: checkpointId },
+    data: { status: 'APPROVED' },
+    include: {
+      team: true,
+      questionAssign: true,
+    },
+  });
+};
+
 module.exports = {
   getAllTeams,
   getTeamById,
@@ -185,5 +197,6 @@ module.exports = {
   markQuestionAnswer,
   getAvailableQuestions,
   getTeamProgress,
+  approveCheckpoint,
 };
 

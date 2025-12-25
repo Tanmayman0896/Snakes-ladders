@@ -15,6 +15,7 @@ router.get('/teams/:teamId/progress', adminController.getTeamProgress);
 
 // Checkpoint routes
 router.get('/checkpoints/pending', adminController.getPendingCheckpoints);
+router.post('/checkpoints/:checkpointId/approve', adminController.approveCheckpoint);
 router.post('/checkpoints/:checkpointId/assign-question', adminController.assignQuestion);
 router.post('/checkpoints/:checkpointId/mark', adminController.markQuestion);
 

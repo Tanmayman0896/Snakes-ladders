@@ -12,6 +12,7 @@ interface Team {
   currentPosition: number
   currentRoom: number
   totalTime: number
+  points: number
   disqualified: boolean
   checkpoints: Array<{
     position: number
@@ -40,47 +41,7 @@ interface ActivityLog {
 export default function SuperAdminDashboard() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("leaderboard")
-  const [teams, setTeams] = useState<Team[]>([
-    {
-      id: "TEAM001",
-      members: ["Member1", "Member2"],
-      currentPosition: 25,
-      currentRoom: 3,
-      totalTime: 1200,
-      disqualified: false,
-      checkpoints: [
-        { position: 1, checkpointApproved: true, questionId: "Q001", questionAssigned: true, answerStatus: "correct" },
-        { position: 6, checkpointApproved: true, questionId: "Q002", questionAssigned: true, answerStatus: "incorrect" },
-        { position: 12, checkpointApproved: true, questionId: "Q003", questionAssigned: true, answerStatus: "pending" },
-        { position: 18, checkpointApproved: false, questionId: null, questionAssigned: false, answerStatus: null },
-      ],
-    },
-    {
-      id: "TEAM002",
-      members: ["Member3", "Member4"],
-      currentPosition: 15,
-      currentRoom: 2,
-      totalTime: 900,
-      disqualified: false,
-      checkpoints: [
-        { position: 1, checkpointApproved: true, questionId: "Q004", questionAssigned: true, answerStatus: "correct" },
-        { position: 5, checkpointApproved: true, questionId: "Q005", questionAssigned: true, answerStatus: "correct" },
-      ],
-    },
-    {
-      id: "TEAM003",
-      members: ["Member5", "Member6"],
-      currentPosition: 50,
-      currentRoom: 5,
-      totalTime: 2100,
-      disqualified: false,
-      checkpoints: [
-        { position: 1, checkpointApproved: true, questionId: "Q001", questionAssigned: true, answerStatus: "correct" },
-        { position: 10, checkpointApproved: true, questionId: "Q006", questionAssigned: true, answerStatus: "incorrect" },
-        { position: 20, checkpointApproved: true, questionId: null, questionAssigned: false, answerStatus: null },
-      ],
-    },
-  ])
+  const [teams, setTeams] = useState<Team[]>([])
   const [questions, setQuestions] = useState<Question[]>([
     { id: "Q001", text: "What is a closure in JavaScript?", difficulty: "medium" },
     { id: "Q002", text: "Explain async/await", difficulty: "hard" },
@@ -178,6 +139,7 @@ export default function SuperAdminDashboard() {
             currentPosition: t.currentPosition || 1,
             currentRoom: t.currentRoom || 1,
             totalTime: t.totalTimeSec || 0,
+            points: t.points || 0,
             disqualified: t.status === 'DISQUALIFIED',
             checkpoints: t.checkpoints || [],
           })))
@@ -379,7 +341,7 @@ export default function SuperAdminDashboard() {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Rank</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Team ID</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Team Name</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Position</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Points</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Time (sec)</th>
@@ -389,9 +351,9 @@ export default function SuperAdminDashboard() {
                   {leaderboard.map((team, idx) => (
                     <tr key={team.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm text-gray-900 font-bold">{idx + 1}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{team.id}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">{team.teamName || team.teamCode || team.id}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{team.currentPosition}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{team.currentRoom}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">{team.points}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{team.totalTime}</td>
                     </tr>
                   ))}

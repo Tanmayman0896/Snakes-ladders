@@ -115,6 +115,27 @@ const getTeamProgress = async (req, res, next) => {
   }
 };
 
+// Approve checkpoint (team physically reached the checkpoint)
+const approveCheckpoint = async (req, res, next) => {
+  try {
+    const { checkpointId } = req.params;
+
+    const checkpoint = await adminService.getCheckpointById(checkpointId);
+    if (!checkpoint) {
+      return sendNotFound(res, MESSAGES.CHECKPOINT_NOT_FOUND);
+    }
+
+    if (checkpoint.status === 'APPROVED') {
+      return sendBadRequest(res, 'Checkpoint already approved');
+    }
+
+    const result = await adminService.approveCheckpoint(checkpointId);
+    return sendSuccess(res, result, 'Checkpoint approved successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllTeams,
   getTeamById,
@@ -123,5 +144,6 @@ module.exports = {
   markQuestion,
   getAvailableQuestions,
   getTeamProgress,
+  approveCheckpoint,
 };
 
