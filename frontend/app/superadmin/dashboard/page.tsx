@@ -6,6 +6,8 @@ import { Navbar } from "@/components/navbar"
 
 interface Team {
   id: string
+  teamCode?: string
+  teamName?: string
   members: string[]
   currentPosition: number
   currentRoom: number
@@ -154,25 +156,81 @@ export default function SuperAdminDashboard() {
   ])
   const [generatedPasswords, setGeneratedPasswords] = useState<Record<string, string>>({})
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
+
+  // Fetch teams from backend
+  const fetchTeams = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const res = await fetch(`${API_URL}/superadmin/teams`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.data) {
+          setTeams(data.data.map((t: any) => ({
+            id: t.id,
+            teamCode: t.teamCode,
+            teamName: t.teamName,
+            members: t.members?.map((m: any) => m.name) || [],
+            currentPosition: t.currentPosition || 1,
+            currentRoom: t.currentRoom || 1,
+            totalTime: t.totalTimeSec || 0,
+            disqualified: t.status === 'DISQUALIFIED',
+            checkpoints: t.checkpoints || [],
+          })))
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching teams:", error)
+    }
+  }
+
   useEffect(() => {
     const userRole = localStorage.getItem("userRole")
     if (userRole !== "superadmin") {
       router.push("/login")
+    } else {
+      fetchTeams()
     }
   }, [router])
 
   const generateRandomPassword = () => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     let password = ""
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       password += chars.charAt(Math.floor(Math.random() * chars.length))
     }
     return password
   }
 
-  const handleGeneratePassword = (teamId: string) => {
+  const handleGeneratePassword = async (teamId: string) => {
     const newPassword = generateRandomPassword()
-    setGeneratedPasswords((prev) => ({ ...prev, [teamId]: newPassword }))
+    
+    try {
+      const token = localStorage.getItem("token")
+      const res = await fetch(`${API_URL}/superadmin/teams/${teamId}/password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newPassword }),
+      })
+
+      if (res.ok) {
+        setGeneratedPasswords((prev) => ({ ...prev, [teamId]: newPassword }))
+        alert(`Password updated successfully! New password: ${newPassword}`)
+      } else {
+        const error = await res.json()
+        alert(`Failed to update password: ${error.message || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error("Error updating password:", error)
+      alert("Failed to update password. Check if backend is running.")
+    }
   }
 
   const handleCreateTeam = () => {
@@ -377,10 +435,14 @@ export default function SuperAdminDashboard() {
                     team.disqualified ? "bg-red-50 border-red-200" : "border-gray-200"
                   }`}
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-3">
                     <div>
-                      <p className="text-xs text-gray-600 uppercase">Team ID</p>
-                      <p className="font-bold text-gray-900">{team.id}</p>
+                      <p className="text-xs text-gray-600 uppercase">Team Code</p>
+                      <p className="font-bold text-gray-900">{team.teamCode || team.id}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600 uppercase">Team Name</p>
+                      <p className="font-bold text-gray-900">{team.teamName || '-'}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-600 uppercase">Position</p>
@@ -461,21 +523,27 @@ export default function SuperAdminDashboard() {
 
                   {/* Generated Password Display */}
                   {generatedPasswords[team.id] && (
-                    <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded flex justify-between items-center">
-                      <p className="text-sm text-green-800">
-                        <span className="font-medium">New Password:</span>{" "}
-                        <span className="font-mono font-bold">{generatedPasswords[team.id]}</span>
+                    <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded">
+                      <p className="text-sm text-green-800 mb-1">
+                        <span className="font-medium">Login Username:</span>{" "}
+                        <span className="font-mono font-bold">{team.teamCode || team.id}</span>
                       </p>
-                      <button
-                        onClick={() => setGeneratedPasswords((prev) => {
-                          const newPasswords = { ...prev }
-                          delete newPasswords[team.id]
-                          return newPasswords
-                        })}
-                        className="text-green-700 hover:text-green-900 text-sm font-medium"
-                      >
-                        ✕ Hide
-                      </button>
+                      <p className="text-sm text-green-800 flex justify-between items-center">
+                        <span>
+                          <span className="font-medium">New Password:</span>{" "}
+                          <span className="font-mono font-bold">{generatedPasswords[team.id]}</span>
+                        </span>
+                        <button
+                          onClick={() => setGeneratedPasswords((prev) => {
+                            const newPasswords = { ...prev }
+                            delete newPasswords[team.id]
+                            return newPasswords
+                          })}
+                          className="text-green-700 hover:text-green-900 text-sm font-medium"
+                        >
+                          ✕ Hide
+                        </button>
+                      </p>
                     </div>
                   )}
 

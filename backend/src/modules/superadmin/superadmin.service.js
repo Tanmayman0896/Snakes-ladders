@@ -3,11 +3,13 @@ const { hashPassword } = require('../../utils/password.util');
 const { generateTeamCode } = require('../../utils/random.util');
 const { GAME_CONFIG, ROOMS } = require('../../config/constants');
 
+// Create team with User entry for login
 const createTeam = async (teamName, members, password) => {
   const teamCode = generateTeamCode();
   const hashedPassword = await hashPassword(password);
   const randomRoom = ROOMS[Math.floor(Math.random() * ROOMS.length)];
 
+  // Create team first
   const team = await prisma.team.create({
     data: {
       teamCode,
@@ -16,36 +18,46 @@ const createTeam = async (teamName, members, password) => {
       members: {
         create: members.map(name => ({ name })),
       },
-      login: {
-        create: {
-          teamId: undefined, // Will be set automatically
-          password: hashedPassword,
-        },
-      },
     },
     include: {
       members: true,
-      login: {
-        select: { id: true },
-      },
     },
   });
 
-  // Update login with teamId
-  await prisma.participantLogin.update({
-    where: { teamId: team.id },
-    data: { teamId: team.id },
+  // Create User entry for login (teamCode as username)
+  await prisma.user.create({
+    data: {
+      username: teamCode,
+      password: hashedPassword,
+      role: 'PARTICIPANT',
+      teamId: team.id,
+    },
   });
 
-  return { ...team, generatedPassword: password };
+  return { 
+    ...team, 
+    generatedPassword: password,
+    loginUsername: teamCode,
+  };
 };
 
 
+// Update team password in User table
 const updateTeamPassword = async (teamId, newPassword) => {
   const hashedPassword = await hashPassword(newPassword);
   
-  return await prisma.participantLogin.update({
-    where: { teamId },
+  // Find the user with this teamId first
+  const user = await prisma.user.findUnique({
+    where: { teamId: teamId },
+  });
+
+  if (!user) {
+    throw new Error('No user found for this team');
+  }
+
+  // Update the user's password
+  return await prisma.user.update({
+    where: { id: user.id },
     data: { password: hashedPassword },
   });
 };
