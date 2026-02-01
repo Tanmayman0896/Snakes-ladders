@@ -1,19 +1,17 @@
 const prisma = require('../../config/db');
-const { hashPassword } = require('../../utils/password.util');
-const { generateTeamCode } = require('../../utils/random.util');
-const { GAME_CONFIG, ROOMS } = require('../../config/constants');
-const { logTeamCreated, logAdminAction, AUDIT_ACTIONS } = require('../audit/audit.service');
-const { assignMapToTeam: assignMap, getAllBoardMaps, clearBoardCache } = require('../game/board.service');
+const {hashPassword} = require('../../utils/password.util');
+const {logTeamCreated, logAdminAction, AUDIT_ACTIONS} = require('../audit/audit.service');
+const {assignMapToTeam: assignMap, getAllBoardMaps, clearBoardCache} = require('../game/board.service');
 
 // Helper function to find an available room with capacity from database
 const findAvailableRoom = async () => {
   // Get all rooms with their capacities from database
   const rooms = await prisma.room.findMany();
-  
+
   // Get team counts per room
   const roomCounts = await prisma.team.groupBy({
     by: ['currentRoom'],
-    _count: { id: true },
+    _count: {id: true},
     where: {
       status: 'ACTIVE', // Only count active teams
     },
@@ -40,11 +38,11 @@ const findAvailableRoom = async () => {
 // Helper function to auto-assign map based on FCFS (10 teams per map)
 const findAvailableMap = async () => {
   const MAP_CAPACITY = 20;
-  
+
   // Get all active maps
   const maps = await prisma.boardMap.findMany({
-    where: { isActive: true },
-    orderBy: { createdAt: 'asc' }, // FCFS - use oldest maps first
+    where: {isActive: true},
+    orderBy: {createdAt: 'asc'}, // FCFS - use oldest maps first
   });
 
   if (maps.length === 0) {
@@ -54,9 +52,9 @@ const findAvailableMap = async () => {
   // Get team counts per map
   const mapCounts = await prisma.team.groupBy({
     by: ['mapId'],
-    _count: { id: true },
+    _count: {id: true},
     where: {
-      mapId: { not: null },
+      mapId: {not: null},
     },
   });
 
@@ -81,7 +79,7 @@ const findAvailableMap = async () => {
 const createTeam = async (teamName, password, members) => {
   // Get the last team to determine team number
   const lastTeam = await prisma.team.findFirst({
-    orderBy: { createdAt: 'desc' },
+    orderBy: {createdAt: 'desc'},
   });
 
   let newTeamNumber = 1;
@@ -97,7 +95,14 @@ const createTeam = async (teamName, password, members) => {
   const assignedRoom = await findAvailableRoom();
   const assignedMapId = await findAvailableMap(); // Auto-assign map (FCFS, 10 teams per map)
 
-  console.log('Creating team:', { teamCode, teamName, assignedRoom, assignedMapId, hasPlainPassword: !!password, hasHashedPassword: !!hashedPassword });
+  console.log('Creating team:', {
+    teamCode,
+    teamName,
+    assignedRoom,
+    assignedMapId,
+    hasPlainPassword: !!password,
+    hasHashedPassword: !!hashedPassword
+  });
 
   // Create team first
   const team = await prisma.team.create({
@@ -107,7 +112,7 @@ const createTeam = async (teamName, password, members) => {
       currentRoom: assignedRoom,
       mapId: assignedMapId, // Auto-assign map
       members: {
-        create: members.map(name => ({ name })),
+        create: members.map(name => ({name})),
       },
     },
     include: {
@@ -126,13 +131,13 @@ const createTeam = async (teamName, password, members) => {
     },
   });
 
-  console.log('Created user:', { username: user.username, hasPassword: !!user.password, role: user.role });
+  console.log('Created user:', {username: user.username, hasPassword: !!user.password, role: user.role});
 
   // Log team creation
   await logTeamCreated('superadmin', teamName);
 
-  return { 
-    ...team, 
+  return {
+    ...team,
     generatedPassword: password,
     loginUsername: teamCode,
   };
@@ -142,10 +147,10 @@ const createTeam = async (teamName, password, members) => {
 // Update team password in User table
 const updateTeamPassword = async (teamId, newPassword) => {
   const hashedPassword = await hashPassword(newPassword);
-  
+
   // Find the user with this teamId first
   const user = await prisma.user.findUnique({
-    where: { teamId: teamId },
+    where: {teamId: teamId},
   });
 
   if (!user) {
@@ -154,85 +159,31 @@ const updateTeamPassword = async (teamId, newPassword) => {
 
   // Update the user's password
   return await prisma.user.update({
-    where: { id: user.id },
-    data: { password: hashedPassword },
+    where: {id: user.id},
+    data: {password: hashedPassword},
   });
 };
 
 const disqualifyTeam = async (teamId) => {
   return await prisma.team.update({
-    where: { id: teamId },
-    data: { status: 'DISQUALIFIED' },
+    where: {id: teamId},
+    data: {status: 'DISQUALIFIED'},
   });
 };
 
 
 const reinstateTeam = async (teamId) => {
   return await prisma.team.update({
-    where: { id: teamId },
-    data: { status: 'ACTIVE' },
-  });
-};
-
-// Get available rooms with capacity from database
-const getAvailableRooms = async (excludeTeamId = null) => {
-  // Get all rooms with their capacities from database
-  const rooms = await prisma.room.findMany();
-  
-  // Get team counts per room
-  const roomCounts = await prisma.team.groupBy({
-    by: ['currentRoom'],
-    _count: { id: true },
-    where: {
-      status: 'ACTIVE',
-      id: excludeTeamId ? { not: excludeTeamId } : undefined,
-    },
-  });
-
-  // Create a map of room -> count
-  const roomCountMap = {};
-  roomCounts.forEach(rc => {
-    roomCountMap[rc.currentRoom] = rc._count.id;
-  });
-
-  // Return all rooms with their capacities
-  return rooms.map(roomData => ({
-    room: roomData.roomNumber,
-    capacity: roomData.capacity,
-    teamsCount: roomCountMap[roomData.roomNumber] || 0,
-    available: (roomCountMap[roomData.roomNumber] || 0) < roomData.capacity,
-  }));
-};
-
-// Auto-assign team to a room with available capacity
-const autoAssignTeamRoom = async (teamId) => {
-  const availableRooms = await getAvailableRooms(teamId);
-  
-  // Filter only rooms with capacity
-  const roomsWithCapacity = availableRooms.filter(r => r.available);
-  
-  if (roomsWithCapacity.length === 0) {
-    throw new Error('All rooms are full. Cannot assign team to any room.');
-  }
-  
-  // Sort by teams count (ascending) to balance load
-  roomsWithCapacity.sort((a, b) => a.teamsCount - b.teamsCount);
-  
-  // Assign to the room with the least teams
-  const bestRoom = roomsWithCapacity[0].room;
-  
-  return await prisma.team.update({
-    where: { id: teamId },
-    data: { currentRoom: bestRoom },
+    where: {id: teamId},
+    data: {status: 'ACTIVE'},
   });
 };
 
 //Change team room
-
 const changeTeamRoom = async (teamId, newRoom) => {
   // Validate room exists in database
   const roomData = await prisma.room.findUnique({
-    where: { roomNumber: newRoom }
+    where: {roomNumber: newRoom}
   });
 
   if (!roomData) {
@@ -244,7 +195,7 @@ const changeTeamRoom = async (teamId, newRoom) => {
     where: {
       currentRoom: newRoom,
       status: 'ACTIVE',
-      id: { not: teamId }, // Exclude current team if already in this room
+      id: {not: teamId}, // Exclude current team if already in this room
     },
   });
 
@@ -253,32 +204,32 @@ const changeTeamRoom = async (teamId, newRoom) => {
   }
 
   return await prisma.team.update({
-    where: { id: teamId },
-    data: { currentRoom: newRoom },
+    where: {id: teamId},
+    data: {currentRoom: newRoom},
   });
 };
 
 const assignMapToTeam = async (teamId, mapId) => {
   // Verify map exists (mapId should be a string UUID)
   const map = await prisma.boardMap.findUnique({
-    where: { id: String(mapId) },
+    where: {id: String(mapId)},
   });
-  
+
   if (!map) {
     throw new Error('Map not found');
   }
-  
+
   // Clear cache for this team since map is changing
   clearBoardCache(teamId);
-  
+
   return await assignMap(teamId, String(mapId));
 };
 
 const adjustTeamTimer = async (teamId, secondsToAdd, reason) => {
   const team = await prisma.team.update({
-    where: { id: teamId },
+    where: {id: teamId},
     data: {
-      totalTimeSec: { increment: secondsToAdd },
+      totalTimeSec: {increment: secondsToAdd},
     },
   });
 
@@ -296,15 +247,15 @@ const adjustTeamTimer = async (teamId, secondsToAdd, reason) => {
 
 const setTeamTimer = async (teamId, totalSeconds, reason) => {
   const currentTeam = await prisma.team.findUnique({
-    where: { id: teamId },
-    select: { totalTimeSec: true },
+    where: {id: teamId},
+    select: {totalTimeSec: true},
   });
 
   const difference = totalSeconds - currentTeam.totalTimeSec;
 
   const team = await prisma.team.update({
-    where: { id: teamId },
-    data: { totalTimeSec: totalSeconds },
+    where: {id: teamId},
+    data: {totalTimeSec: totalSeconds},
   });
 
   // Log the time change
@@ -321,7 +272,7 @@ const setTeamTimer = async (teamId, totalSeconds, reason) => {
 
 const undoCheckpoint = async (checkpointId) => {
   const checkpoint = await prisma.checkpoint.findUnique({
-    where: { id: checkpointId },
+    where: {id: checkpointId},
     include: {
       team: true,
       questionAssign: true,
@@ -345,18 +296,18 @@ const undoCheckpoint = async (checkpointId) => {
   // Delete question assignment if exists
   if (checkpoint.questionAssign) {
     await prisma.questionAssignment.delete({
-      where: { id: checkpoint.questionAssign.id },
+      where: {id: checkpoint.questionAssign.id},
     });
   }
 
   // Delete the checkpoint
   await prisma.checkpoint.delete({
-    where: { id: checkpointId },
+    where: {id: checkpointId},
   });
 
   // Update team position and enable dice roll
   await prisma.team.update({
-    where: { id: checkpoint.teamId },
+    where: {id: checkpoint.teamId},
     data: {
       currentPosition: newPosition,
       canRollDice: true,
@@ -391,53 +342,85 @@ const getAllTeamsWithDetails = async () => {
     include: {
       members: true,
       user: {
-        select: {
-          username: true,
-        },
+        select: {username: true},
       },
       map: {
-        select: {
-          id: true,
-          name: true,
-        },
+        select: {id: true, name: true},
       },
       checkpoints: {
-        orderBy: { checkpointNumber: 'desc' },
+        orderBy: {checkpointNumber: 'desc'},
         include: {
           questionAssign: {
-            include: { question: true },
+            include: {question: true},
           },
         },
       },
       timeLogs: {
-        orderBy: { createdAt: 'desc' },
+        orderBy: {createdAt: 'desc'},
       },
     },
-    orderBy: [
-      { currentPosition: 'desc' },
-      { totalTimeSec: 'asc' },
-    ],
   });
 
-  // Calculate current time for all teams at once (single timestamp for consistency)
-  const now = new Date();
-  const nowTimestamp = now.getTime();
-  
-  return teams.map(team => {
+  const nowTimestamp = Date.now();
+
+  // Step 1: compute live totalTimeSec
+  const enrichedTeams = teams.map(team => {
     let currentTimeSec = team.totalTimeSec;
-    
-    // If timer is running, calculate elapsed time
-    if (!team.timerPaused && team.status !== 'COMPLETED' && team.timerStartedAt) {
-      const elapsedSinceStart = Math.floor((nowTimestamp - team.timerStartedAt.getTime()) / 1000);
-      currentTimeSec = team.totalTimeSec + elapsedSinceStart;
+
+    if (
+      !team.timerPaused &&
+      team.status !== 'COMPLETED' &&
+      team.timerStartedAt
+    ) {
+      const elapsed = Math.floor(
+        (nowTimestamp - team.timerStartedAt.getTime()) / 1000
+      );
+      currentTimeSec += elapsed;
     }
-    
+
     return {
       ...team,
-      totalTimeSec: currentTimeSec
+      totalTimeSec: currentTimeSec,
     };
   });
+
+  // Step 2: find min/max for scaling
+  const times = enrichedTeams.map(t => t.totalTimeSec);
+  const points = enrichedTeams.map(t => t.points);
+
+  const minTime = Math.min(...times);
+  const maxTime = Math.max(...times);
+  const minPoints = Math.min(...points);
+  const maxPoints = Math.max(...points);
+
+  // Prevent divide-by-zero
+  const timeRange = maxTime - minTime || 1;
+  const pointsRange = maxPoints - minPoints || 1;
+
+  // Step 3: scale + score
+  const scoredTeams = enrichedTeams.map(team => {
+    // Inverted scaling for time (lower time = higher score)
+    const scaledTime =
+      1 - (team.totalTimeSec - minTime) / timeRange;
+
+    // Normal scaling for points
+    const scaledPoints =
+      (team.points - minPoints) / pointsRange;
+
+    const score =
+      0.6 * scaledTime +
+      0.4 * scaledPoints;
+
+    return {
+      ...team,
+      score,
+    };
+  });
+
+  // Step 4: sort by score (desc)
+  return scoredTeams.sort((a, b) => b.score - a.score);
 };
+
 
 const createAdmin = async (username, password) => {
   const hashedPassword = await hashPassword(password);
@@ -452,7 +435,7 @@ const createAdmin = async (username, password) => {
 
 const deleteAdmin = async (adminId) => {
   return await prisma.adminLogin.delete({
-    where: { id: adminId },
+    where: {id: adminId},
   });
 };
 
@@ -482,26 +465,26 @@ const addSnake = async (startPos, endPos) => {
 
 const removeSnake = async (snakeId) => {
   return await prisma.boardRule.delete({
-    where: { id: snakeId },
+    where: {id: snakeId},
   });
 };
 
 const getAllBoardRules = async () => {
   return await prisma.boardRule.findMany({
-    orderBy: { startPos: 'asc' },
+    orderBy: {startPos: 'asc'},
   });
 };
 
 const getRoomCapacity = async () => {
   // Get all rooms with their capacities from database
   const rooms = await prisma.room.findMany({
-    orderBy: { roomNumber: 'asc' }
+    orderBy: {roomNumber: 'asc'}
   });
-  
+
   // Get team counts per room
   const roomCounts = await prisma.team.groupBy({
     by: ['currentRoom'],
-    _count: { id: true },
+    _count: {id: true},
     where: {
       status: 'ACTIVE',
     },

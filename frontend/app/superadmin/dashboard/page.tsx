@@ -20,6 +20,7 @@ interface Team {
   disqualified: boolean
   mapId?: string
   mapName?: string
+  score: number
   checkpoints: Array<{
     id: string
     checkpointNumber: number
@@ -440,7 +441,6 @@ export default function SuperAdminDashboard() {
   // Calculate leaderboard - sort by points (descending), then by time (ascending)
   const leaderboard = [...teams]
     .filter((t) => !t.disqualified)
-    .sort((a, b) => b.points - a.points || a.totalTime - b.totalTime)
 
   return (
     <div className="min-h-screen bg-white relative">
@@ -506,6 +506,7 @@ export default function SuperAdminDashboard() {
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Position</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Points</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Time</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Score</th>
                 </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -525,6 +526,7 @@ export default function SuperAdminDashboard() {
                       <td className="px-4 py-3 text-sm text-gray-900">{team.currentPosition}</td>
                       <td className="px-4 py-3 text-sm text-gray-900">{team.points}</td>
                       <td className="px-4 py-3 text-sm font-mono text-gray-900">{formatTime(team.totalTime)}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900">{team.score}</td>
                     </tr>
                   )
                 })}
