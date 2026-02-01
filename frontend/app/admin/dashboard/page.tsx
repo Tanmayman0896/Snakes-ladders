@@ -308,6 +308,46 @@ export default function AdminDashboard() {
     );
   }
 
+  if (systemSettings.gameOver === "true") {
+    return (
+      <div className="fixed inset-0 overflow-hidden bg-black">
+        {/* Background Image */}
+        <Image
+          src="/background.svg"
+          alt="Background"
+          fill
+          priority
+          className="object-cover object-center"
+          placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
+        />
+
+        {/* Content overlay */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center mx-16">
+          <div
+            className="flex flex-col items-center justify-center text-center w-[90vw] p-8"
+            style={{
+              borderRadius: 70,
+              background: "rgba(255,255,255,0.10)",
+              boxShadow: "0 2px 32px 0 rgba(0,0,0,0.18)",
+              border: "1px solid rgba(255,255,255,0.7)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <div
+              className={`text-[7rem] font-extrabold text-[#D7CFC2] ${venom.className} tracking-tight leading-36`}
+            >
+              VENOM
+            </div>
+
+            <div className={`text-[#D1883F] ${mayak.className}`}>
+              Thank you for participating! The game is now over.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   const filteredTeams = teams.filter(
     (team) =>

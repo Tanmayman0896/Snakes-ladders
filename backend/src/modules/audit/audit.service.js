@@ -217,8 +217,11 @@ const getUserAuditLogs = async (username, limit = 50) => {
 };
 
 // Get all audit logs (for superadmin)
-const getAllAuditLogs = async (limit = 100) => {
+const getAllAuditLogs = async (query, limit) => {
   const logs = await prisma.auditLog.findMany({
+    where: query ? {
+      actor: {contains: query},
+    } : {},
     orderBy: { createdAt: 'desc' },
     take: limit,
   });

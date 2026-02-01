@@ -5,6 +5,7 @@ import {useRouter} from "next/navigation"
 import {Navbar} from "@/components/navbar"
 import {ROOMS} from "@/lib/constants"
 import {apiService} from "@/lib/service";
+import {Input} from "@/components/ui/input";
 
 interface Team {
   id: string
@@ -83,6 +84,7 @@ export default function SuperAdminDashboard() {
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([])
   const [generatedPasswords, setGeneratedPasswords] = useState<Record<string, string>>({})
   const [maps, setMaps] = useState<Array<{ id: string, name: string, teamsCount: number }>>([])
+  const [searchAuditQuery, setSearchAuditQuery] = useState("");
   const [roomCapacities, setRoomCapacities] = useState<Array<{
     room: string,
     currentTeams: number,
@@ -156,7 +158,7 @@ export default function SuperAdminDashboard() {
   // Fetch activity logs from backend
   const fetchActivityLogs = async () => {
     try {
-      const {data} = await apiService.fetchAuditLogs();
+      const {data} = await apiService.fetchAuditLogs(searchAuditQuery);
       for (const log of data) {
         log.timestamp = new Date(log.timestamp)
       }
@@ -181,6 +183,7 @@ export default function SuperAdminDashboard() {
       const interval = setInterval(() => {
         fetchTeams()
         fetchRoomCapacities()
+        fetchActivityLogs()
       }, 10000)
       return () => clearInterval(interval)
     }
@@ -429,6 +432,10 @@ export default function SuperAdminDashboard() {
       alert("Failed to undo checkpoint. Check if backend is running.")
     }
   }
+
+  useEffect(() => {
+    fetchActivityLogs();
+  }, [searchAuditQuery]);
 
   // Calculate leaderboard - sort by points (descending), then by time (ascending)
   const leaderboard = [...teams]
@@ -908,6 +915,15 @@ export default function SuperAdminDashboard() {
               </div>
             ) : (
               <div className="overflow-x-auto">
+                <div>
+                  <Input
+                    type="text"
+                    value={searchAuditQuery}
+                    onChange={(e) => setSearchAuditQuery(e.target.value)}
+                    placeholder="Search by ID"
+                    className="my-2"
+                  />
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                   <tr>

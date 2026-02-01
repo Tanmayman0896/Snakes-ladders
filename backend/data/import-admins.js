@@ -1,36 +1,40 @@
-const XLSX = require('xlsx');
 const path = require('path');
 const prisma = require('../src/config/db');
-const { hashPassword } = require('../src/utils/password.util');
+const {hashPassword} = require('../src/utils/password.util');
+const fs = require("fs");
+const csv = require("csv-parser");
 
 async function importAdmins() {
   try {
     // Read the Excel file
-    const filePath = path.join(__dirname, 'ADMIN PORTAL LOGIN.xlsx');
-    const workbook = XLSX.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(sheet);
+    const filePath = path.join(__dirname, 'Admins.csv');
+    const rows = [];
 
-    console.log(`📋 Found ${data.length} admins in Excel file`);
-    
-    // Show available columns
-    if (data.length > 0) {
-      console.log('📊 Available columns:', Object.keys(data[0]));
-    }
-    
+    console.log('📥 Reading CSV...');
+
+    await new Promise((resolve, reject) => {
+      fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('data', (row) => rows.push(row))
+        .on('end', resolve)
+        .on('error', reject);
+    });
+
+    console.log(`Found ${rows.length} admins\n`);
+
     console.log('🚀 Starting admin import...\n');
 
     let successCount = 0;
     let skipCount = 0;
     let errorCount = 0;
+    const txs = [];
 
-    for (const row of data) {
+    for (const row of rows) {
       try {
         // Expected columns: TEAM ID (used as username), Password/PASSWORD
         // Support multiple column name variants for username
-        const username = row['TEAM ID'] || row['ADMIN ID'] || row.Username || row.username || row.USERNAME || row['User Name'] || row['ADMIN_ID'] || row['Admin ID'];
-        const password = row.Password || row.password || row.PASSWORD;
+        const username = row.id?.toString().trim();
+        const password = row.password?.toString();
 
         if (!username || !password) {
           console.log(`⚠️  Skipping row - missing username or password:`, row);
@@ -40,7 +44,7 @@ async function importAdmins() {
 
         // Check if admin already exists
         const existingUser = await prisma.user.findUnique({
-          where: { username: username.toString().trim() },
+          where: {username: username.toString().trim()},
         });
 
         if (existingUser) {
@@ -53,13 +57,11 @@ async function importAdmins() {
         const hashedPassword = await hashPassword(password.toString());
 
         // Create admin user (no team association)
-        await prisma.user.create({
-          data: {
-            username: username.toString().trim(),
-            password: hashedPassword,
-            role: 'ADMIN',
-            teamId: null, // Admins don't have teams
-          },
+        txs.push({
+          username: username.toString().trim(),
+          password: hashedPassword,
+          role: 'ADMIN',
+          teamId: null, // Admins don't have teams
         });
 
         console.log(`✅ ${username} - Admin created successfully`);
@@ -70,6 +72,11 @@ async function importAdmins() {
         errorCount++;
       }
     }
+
+    await prisma.user.createMany({
+      data: txs,
+      skipDuplicates: true,
+    })
 
     console.log('\n' + '='.repeat(50));
     console.log('Import Summary:');

@@ -1,175 +1,196 @@
-const XLSX = require('xlsx');
+const fs = require('fs');
 const path = require('path');
+const csv = require('csv-parser');
 const prisma = require('../src/config/db');
-const { hashPassword } = require('../src/utils/password.util');
+const {hashPassword} = require('../src/utils/password.util');
 
-// Helper function to find an available room with capacity from database
-async function findAvailableRoom() {
+const MAP_CAPACITY = 10;
+
+/* -------------------- helpers -------------------- */
+
+async function getRoomUsage() {
   const rooms = await prisma.room.findMany();
   const roomCounts = await prisma.team.groupBy({
     by: ['currentRoom'],
-    _count: { id: true },
-    where: { status: 'ACTIVE' },
+    _count: {id: true},
+    where: {status: 'ACTIVE'},
   });
 
-  const roomCountMap = {};
-  roomCounts.forEach(rc => {
-    roomCountMap[rc.currentRoom] = rc._count.id;
-  });
-
+  const usage = {};
   for (const room of rooms) {
-    const count = roomCountMap[room.roomNumber] || 0;
-    if (count < room.capacity) {
-      return room.roomNumber;
+    usage[room.roomNumber] = {
+      capacity: room.capacity,
+      used: 0,
+    };
+  }
+
+  for (const rc of roomCounts) {
+    if (usage[rc.currentRoom]) {
+      usage[rc.currentRoom].used = rc._count.id;
     }
   }
 
-  throw new Error('All rooms are full. Maximum capacity reached.');
+  return usage;
 }
 
-// Helper function to find available map (10 teams per map, FCFS)
-async function findAvailableMap() {
-  const MAP_CAPACITY = 10;
+async function getMapUsage() {
   const maps = await prisma.boardMap.findMany({
-    where: { isActive: true },
-    orderBy: { createdAt: 'asc' },
+    where: {isActive: true},
+    orderBy: {createdAt: 'asc'},
   });
 
-  if (maps.length === 0) {
-    throw new Error('No active maps available. Please create maps first.');
+  if (!maps.length) {
+    throw new Error('No active maps available');
   }
 
   const mapCounts = await prisma.team.groupBy({
     by: ['mapId'],
-    _count: { id: true },
-    where: { mapId: { not: null } },
+    _count: {id: true},
+    where: {mapId: {not: null}},
   });
 
-  const mapCountMap = {};
-  mapCounts.forEach(mc => {
-    mapCountMap[mc.mapId] = mc._count.id;
-  });
-
+  const usage = {};
   for (const map of maps) {
-    const count = mapCountMap[map.id] || 0;
-    if (count < MAP_CAPACITY) {
-      return map.id;
+    usage[map.id] = {
+      used: 0,
+      map,
+    };
+  }
+
+  for (const mc of mapCounts) {
+    if (usage[mc.mapId]) {
+      usage[mc.mapId].used = mc._count.id;
     }
   }
 
-  throw new Error('All maps are at capacity (10 teams each)');
+  return usage;
 }
 
+/* -------------------- main importer -------------------- */
+
 async function importTeams() {
-  try {
-    // Read the Excel file
-    const filePath = path.join(__dirname, 'DEMO PARTICIPANTS LOGIN.xlsx');
-    const workbook = XLSX.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(sheet);
+  const filePath = path.join(__dirname, 'Teams.csv');
+  const rows = [];
 
-    console.log(`Found ${data.length} teams in Excel file`);
-    console.log('Starting import...\n');
+  console.log('📥 Reading CSV...');
 
-    let successCount = 0;
-    let skipCount = 0;
-    let errorCount = 0;
+  await new Promise((resolve, reject) => {
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => rows.push(row))
+      .on('end', resolve)
+      .on('error', reject);
+  });
 
-    for (const row of data) {
-      try {
-        // Expected columns: TeamCode/TEAM ID, TeamName, Password/PASSWORD, Members (comma-separated)
-        const teamCode = row.TeamCode || row['Team Code'] || row.teamCode || row['TEAM ID'] || row['Team ID'];
-        const teamName = row.TeamName || row['Team Name'] || row.teamName || row['TEAM NAME'];
-        const password = row.Password || row.password || row.PASSWORD;
-        const membersStr = row.Members || row.members || row.MEMBERS || '';
+  console.log(`Found ${rows.length} teams\n`);
 
-        if (!teamCode || !password) {
-          console.log(`⚠️  Skipping row - missing TeamCode or Password:`, row);
-          skipCount++;
-          continue;
+  const roomUsage = await getRoomUsage();
+  const mapUsage = await getMapUsage();
+
+  let success = 0;
+  let skipped = 0;
+  let failed = 0;
+
+  for (const row of rows) {
+    const teamCode = row.id?.toString().trim();
+    const teamName = row.name?.toString().trim();
+    const password = row.password?.toString();
+
+    if (!teamCode || !password) {
+      console.log(`⚠️ Skipping invalid row`, row);
+      skipped++;
+      continue;
+    }
+
+    const exists = await prisma.team.findUnique({
+      where: {teamCode},
+    });
+
+    if (exists) {
+      console.log(`⏭️ ${teamCode} already exists`);
+      skipped++;
+      continue;
+    }
+
+    try {
+      // assign room
+      let assignedRoom = null;
+      for (const [room, info] of Object.entries(roomUsage)) {
+        if (info.used < info.capacity) {
+          assignedRoom = room;
+          info.used++;
+          break;
         }
+      }
 
-        // If no team name provided, generate one from teamCode
-        const finalTeamName = teamName || `Team ${teamCode}`;
+      if (!assignedRoom) {
+        throw new Error('All rooms full');
+      }
 
-        // Check if team already exists
-        const existingTeam = await prisma.team.findUnique({
-          where: { teamCode: teamCode.toString() },
-        });
-
-        if (existingTeam) {
-          console.log(`⏭️  ${teamCode} already exists, skipping...`);
-          skipCount++;
-          continue;
+      // assign map
+      let assignedMapId = null;
+      for (const mapId in mapUsage) {
+        if (mapUsage[mapId].used < MAP_CAPACITY) {
+          assignedMapId = mapId;
+          mapUsage[mapId].used++;
+          break;
         }
+      }
 
-        // Parse members
-        const members = membersStr
-          .split(',')
-          .map(m => m.trim())
-          .filter(m => m.length > 0);
+      if (!assignedMapId) {
+        throw new Error('All maps at capacity');
+      }
 
-        if (members.length === 0) {
-          members.push('Member 1', 'Member 2', 'Member 3'); // Default members
-        }
+      const hashedPassword = await hashPassword(password);
 
-        // Hash password
-        const hashedPassword = await hashPassword(password.toString());
-
-        // Get available room and map
-        const assignedRoom = await findAvailableRoom();
-        const assignedMapId = await findAvailableMap();
-
-        // Create team
-        const team = prisma.team.create({
+      // 🔥 short, clean transaction
+      await prisma.$transaction(async (tx) => {
+        const team = await tx.team.create({
           data: {
-            teamCode: teamCode.toString(),
-            teamName: finalTeamName.toString(),
+            teamCode,
+            teamName,
             currentRoom: assignedRoom,
             mapId: assignedMapId,
             members: {
-              create: members.map(name => ({ name })),
+              create: [
+                {name: 'Member 1'},
+                {name: 'Member 2'},
+                {name: 'Member 3'},
+              ],
             },
-          },
-          include: {
-            members: true,
-            map: true,
           },
         });
 
-        // Create User entry for login
-        const user = prisma.user.create({
+        await tx.user.create({
           data: {
-            username: teamCode.toString(),
+            username: teamCode,
             password: hashedPassword,
             role: 'PARTICIPANT',
             teamId: team.id,
           },
         });
+      });
 
-        await prisma.$transaction([team, user]);
+      console.log(`✅ ${teamCode} (${teamName}) created`);
+      success++;
 
-        console.log(`✅ ${teamCode} - ${finalTeamName} created successfully`);
-        successCount++;
-
-      } catch (rowError) {
-        console.error(`❌ Error processing team:`, row, rowError.message);
-        errorCount++;
-      }
+    } catch (err) {
+      console.error(`❌ Failed for ${teamCode}: ${err.message}`);
+      failed++;
     }
-
-    console.log('Import Summary:');
-    console.log(`✅ Success: ${successCount}`);
-    console.log(`⏭️ Skipped: ${skipCount}`);
-    console.log(`❌ Errors: ${errorCount}`);
-
-  } catch (error) {
-    console.error('Fatal error:', error);
-  } finally {
-    await prisma.$disconnect();
   }
+
+  console.log('\n📊 Import Summary');
+  console.log(`✅ Success: ${success}`);
+  console.log(`⏭️ Skipped: ${skipped}`);
+  console.log(`❌ Failed: ${failed}`);
+
+  await prisma.$disconnect();
 }
 
-// Run the import
-importTeams();
+/* -------------------- run -------------------- */
+
+importTeams().catch(async (e) => {
+  console.error('Fatal error:', e);
+  await prisma.$disconnect();
+});

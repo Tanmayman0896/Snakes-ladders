@@ -23,7 +23,7 @@ const login = async (req, res, next) => {
     return sendSuccess(res, result, MESSAGES.LOGIN_SUCCESS);
   } catch (error) {
     if (error.message === 'Invalid credentials') {
-      return sendError(res, MESSAGES.INVALID_CREDENTIALS, 401);
+      return sendError(res, MESSAGES.INVALID_CREDENTIALS, 400);
     }
     if (error.message === 'Team has been disqualified') {
       return sendError(res, MESSAGES.TEAM_DISQUALIFIED, 403);

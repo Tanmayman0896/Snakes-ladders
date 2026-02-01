@@ -68,6 +68,7 @@ export default function LoginPage() {
         router.push('/participant/dashboard')
       }
     } catch (err: any) {
+      console.log('err', err)
       setError(err.message || 'Invalid credentials')
       setLoading(false)
     }

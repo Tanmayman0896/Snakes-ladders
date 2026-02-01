@@ -13,7 +13,7 @@ const createTeam = async (req, res, next) => {
     }
 
     const password = generateRandomPassword(8);
-    const team = await superadminService.createTeam(teamName, members, password);
+    const team = await superadminService.createTeam(teamName, password, members);
 
     return sendCreated(res, team, MESSAGES.TEAM_CREATED);
   } catch (error) {
@@ -243,7 +243,8 @@ const getAllMaps = async (req, res, next) => {
 const getAuditLogs = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
-    const logs = await auditService.getAllAuditLogs(limit);
+    const query = req.query['searchAuditQuery'] || null;
+    const logs = await auditService.getAllAuditLogs(query, limit);
     return sendSuccess(res, logs, 'Audit logs fetched successfully');
   } catch (error) {
     next(error);

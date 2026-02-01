@@ -39,7 +39,7 @@ const findAvailableRoom = async () => {
 
 // Helper function to auto-assign map based on FCFS (10 teams per map)
 const findAvailableMap = async () => {
-  const MAP_CAPACITY = 10;
+  const MAP_CAPACITY = 20;
   
   // Get all active maps
   const maps = await prisma.boardMap.findMany({
@@ -87,10 +87,8 @@ const createTeam = async (teamName, password, members) => {
   let newTeamNumber = 1;
   if (lastTeam && lastTeam.teamCode) {
     // Extract number from teamCode (e.g., "TEAM001" -> 1)
-    const match = lastTeam.teamCode.match(/\d+$/);
-    if (match) {
-      newTeamNumber = parseInt(match[0], 10) + 1;
-    }
+    const teamNumber = parseInt(lastTeam.teamCode.replace("TEAM", ""), 10);
+    newTeamNumber = teamNumber + 1;
   }
 
   // Format with leading zeros (e.g., 1 -> "001", 12 -> "012", 123 -> "123")

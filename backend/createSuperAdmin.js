@@ -15,27 +15,27 @@ const hashPassword = async (password) => {
 async function main() {
   try {
     // 2. Hash password
-    const plainPassword = "1234";
+    const plainPassword = process.env.PASSWORD;
     const adminPassword = await hashPassword(plainPassword);
 
     const adminCount = await prisma.user.findMany({
       where: {
-        role: "ADMIN"
+        role: "SUPERADMIN"
       }
     });
-    const username = `ADMIN${adminCount.length.toString().padStart(3, '0')}`;
+    const username = `SUPER${(adminCount.length + 1).toString().padStart(3, '0')}`;
 
     // 3. Create admin user
     const admin = await prisma.user.create({
       data: {
         username,
         password: adminPassword,
-        role: 'ADMIN',
+        role: 'SUPERADMIN',
       },
     });
 
     // 4. Return / print plain password
-    console.log('\n✅ Admin user ready');
+    console.log('\n✅ Super Admin user ready');
     console.log('Username:', username);
     console.log('Plain password:', plainPassword);
   } catch (err) {
