@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const { MESSAGES } = require('../config/constants');
 const { sendUnauthorized } = require('../utils/response.util');
-const prisma = require('../config/db');
 
 //Verify JWT token middleware
 const verifyToken = async(req, res, next) => {
@@ -15,24 +14,13 @@ const verifyToken = async(req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
+    // Verify JWT signature and expiration
     req.user = jwt.verify(token, env.JWT_SECRET);
-    const tokenExists = await prisma.token.findUnique({
-      where: {
-        userId: req.user.userId,
-      }
-    });
-
-    if (!tokenExists)
-      next();
-    else {
-      const storedToken = tokenExists.token;
-      if (storedToken !== token) {
-        return sendUnauthorized(res, MESSAGES.UNAUTHORIZED);
-      } else {
-        next();
-      }
-    }
+    next();
   } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return sendUnauthorized(res, 'Token expired');
+    }
     return sendUnauthorized(res, MESSAGES.INVALID_CREDENTIALS);
   }
 };
