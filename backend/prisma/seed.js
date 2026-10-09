@@ -66,8 +66,8 @@ async function main() {
     console.log(`✅ Admin created/updated: ${username} (password: admin123)`);
   }
 
-  // 6. Create 40 Teams and Participant Logins
-  console.log('\n--- 6. Seeding 40 Participant Teams ---');
+  // 6. Create 60 Teams and Participant Logins
+  console.log('\n--- 6. Seeding 60 Participant Teams ---');
   const allMaps = await prisma.boardMap.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } });
   const defaultMapId = allMaps.length > 0 ? allMaps[0].id : null;
 

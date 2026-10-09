@@ -3,60 +3,108 @@ const prisma = require('../src/config/db');
 const BOARD_MAPS = [
   {
     name: 'Map-1',
-    snakes: [4, 9, 12, 17, 25, 30, 33, 38, 41, 46, 54, 59, 62, 67, 75, 80, 83, 88, 91, 96, 104, 109, 112, 117, 125, 130, 133, 138, 143, 147, 149],
-    ladders: [{start: 8, end: 14}, {start: 19, end: 22}, {start: 39, end: 44}, {start: 58, end: 64}, {start: 78, end: 82}, {start: 99, end: 102}, {start: 119, end: 122}, {start: 139, end: 144}],
+    ladders: [
+      { start: 3, end: 8 },
+      { start: 12, end: 16 },
+      { start: 21, end: 27 },
+      { start: 34, end: 39 },
+      { start: 47, end: 52 },
+      { start: 61, end: 66 },
+      { start: 73, end: 78 },
+      { start: 88, end: 94 },
+      { start: 104, end: 110 },
+    ],
+    snakes: [
+      2, 6, 18, 31, 42, 55, 63, 71, 79,
+      86, 91, 99, 108, 117, 124, 132, 138,
+      142, 146, 149,
+    ],
   },
   {
     name: 'Map-2',
-    snakes: [2, 6, 14, 19, 22, 27, 35, 40, 43, 48, 51, 56, 64, 69, 72, 77, 85, 90, 93, 98, 101, 106, 114, 119, 122, 127, 135, 140, 143, 147, 149],
-    ladders: [{start: 9, end: 12}, {start: 18, end: 24}, {start: 38, end: 42}, {start: 59, end: 62}, {start: 79, end: 82}, {start: 99, end: 104}, {start: 118, end: 124}, {start: 138, end: 142}],
+    ladders: [
+      { start: 4, end: 9 },
+      { start: 14, end: 19 },
+      { start: 26, end: 31 },
+      { start: 38, end: 44 },
+      { start: 51, end: 57 },
+      { start: 64, end: 70 },
+      { start: 76, end: 81 },
+      { start: 92, end: 97 },
+      { start: 115, end: 121 },
+    ],
+    snakes: [
+      5, 11, 23, 29, 36, 48, 59, 67, 74,
+      83, 89, 96, 103, 111, 119, 127, 135,
+      141, 145, 149,
+    ],
   },
   {
     name: 'Map-3',
-    snakes: [5, 10, 13, 18, 21, 26, 34, 39, 42, 47, 55, 60, 63, 68, 71, 76, 84, 89, 92, 97, 105, 110, 113, 118, 121, 126, 134, 139, 143, 147, 149],
-    ladders: [{start: 8, end: 12}, {start: 19, end: 24}, {start: 38, end: 44}, {start: 58, end: 62}, {start: 79, end: 82}, {start: 99, end: 102}, {start: 119, end: 124}, {start: 138, end: 142}],
+    ladders: [
+      { start: 2, end: 7 },
+      { start: 17, end: 22 },
+      { start: 29, end: 34 },
+      { start: 41, end: 46 },
+      { start: 55, end: 60 },
+      { start: 69, end: 74 },
+      { start: 82, end: 87 },
+      { start: 95, end: 100 },
+      { start: 111, end: 117 },
+    ],
+    snakes: [
+      8, 15, 25, 33, 44, 52, 61, 70, 78,
+      85, 93, 101, 109, 116, 123, 130, 137,
+      143, 147, 149,
+    ],
   },
   {
     name: 'Map-4',
-    snakes: [2, 8, 14, 19, 21, 26, 33, 39, 45, 50, 52, 57, 64, 69, 71, 76, 83, 88, 95, 100, 102, 107, 114, 119, 121, 126, 133, 138, 143, 147, 149],
-    ladders: [{start: 9, end: 12}, {start: 18, end: 23}, {start: 38, end: 42}, {start: 59, end: 62}, {start: 79, end: 82}, {start: 98, end: 103}, {start: 118, end: 123}, {start: 139, end: 144}],
+    ladders: [
+      { start: 5, end: 10 },
+      { start: 13, end: 18 },
+      { start: 28, end: 33 },
+      { start: 40, end: 46 },
+      { start: 53, end: 59 },
+      { start: 67, end: 72 },
+      { start: 81, end: 86 },
+      { start: 103, end: 109 },
+      { start: 125, end: 131 },
+    ],
+    snakes: [
+      3, 9, 16, 24, 35, 43, 50, 58, 65,
+      77, 84, 90, 98, 106, 114, 122, 134,
+      140, 144, 149,
+    ],
   },
   {
     name: 'Map-5',
-    snakes: [5, 7, 13, 18, 25, 30, 32, 37, 44, 49, 51, 56, 63, 68, 75, 80, 82, 87, 94, 99, 101, 106, 113, 118, 125, 130, 132, 137, 143, 147, 149],
-    ladders: [{start: 9, end: 12}, {start: 19, end: 22}, {start: 39, end: 42}, {start: 59, end: 62}, {start: 78, end: 83}, {start: 98, end: 103}, {start: 119, end: 122}, {start: 139, end: 142}],
-  },
-  {
-    name: 'Map-6',
-    snakes: [3, 10, 11, 17, 25, 28, 32, 37, 41, 45, 52, 59, 64, 68, 74, 77, 81, 90, 92, 97, 105, 108, 114, 117, 121, 130, 132, 135, 143, 147, 149],
-    ladders: [{start: 8, end: 14}, {start: 19, end: 22}, {start: 39, end: 43}, {start: 58, end: 61}, {start: 79, end: 84}, {start: 99, end: 102}, {start: 119, end: 124}, {start: 138, end: 144}],
-  },
-  {
-    name: 'Map-7',
-    snakes: [5, 9, 12, 16, 23, 27, 34, 38, 41, 45, 52, 56, 63, 67, 74, 78, 81, 85, 92, 96, 103, 107, 114, 118, 121, 125, 132, 136, 143, 147, 149],
-    ladders: [{start: 8, end: 13}, {start: 19, end: 22}, {start: 39, end: 43}, {start: 59, end: 62}, {start: 79, end: 83}, {start: 99, end: 102}, {start: 119, end: 123}, {start: 139, end: 142}],
-  },
-  {
-    name: 'Map-8',
-    snakes: [3, 8, 11, 16, 24, 29, 32, 37, 45, 50, 53, 58, 61, 66, 74, 79, 82, 87, 95, 100, 103, 108, 111, 116, 124, 129, 132, 137, 143, 147, 149],
-    ladders: [{start: 9, end: 14}, {start: 19, end: 22}, {start: 39, end: 42}, {start: 59, end: 64}, {start: 78, end: 84}, {start: 98, end: 102}, {start: 119, end: 122}, {start: 139, end: 142}],
-  },
-  {
-    name: 'Map-9',
-    snakes: [4, 10, 12, 18, 21, 27, 35, 39, 43, 48, 51, 56, 64, 69, 72, 77, 85, 90, 93, 98, 101, 106, 114, 119, 122, 127, 135, 140, 143, 147, 149],
-    ladders: [{start: 8, end: 13}, {start: 19, end: 24}, {start: 38, end: 42}, {start: 59, end: 62}, {start: 79, end: 82}, {start: 99, end: 104}, {start: 118, end: 124}, {start: 138, end: 142}],
-  },
-  {
-    name: 'Map-10',
-    snakes: [3, 9, 11, 17, 24, 28, 32, 40, 45, 49, 53, 57, 61, 66, 74, 78, 82, 90, 95, 99, 103, 107, 111, 116, 124, 128, 132, 140, 143, 147, 149],
-    ladders: [{start: 8, end: 14}, {start: 19, end: 22}, {start: 38, end: 42}, {start: 59, end: 63}, {start: 79, end: 85}, {start: 98, end: 102}, {start: 119, end: 122}, {start: 138, end: 142}],
+    ladders: [
+      { start: 6, end: 11 },
+      { start: 16, end: 21 },
+      { start: 30, end: 36 },
+      { start: 43, end: 48 },
+      { start: 57, end: 63 },
+      { start: 71, end: 76 },
+      { start: 84, end: 90 },
+      { start: 100, end: 106 },
+      { start: 118, end: 124 },
+    ],
+    snakes: [
+      1, 7, 19, 27, 38, 45, 54, 62, 69,
+      80, 87, 94, 102, 110, 120, 128, 136,
+      142, 146, 149,
+    ],
   },
 ];
 
 async function seedBoardMaps() {
-  console.log('🌱 Starting board maps seed...\n');
+  console.log('🌱 Starting board maps seed (5 Maps)...\n');
 
-  // Create or update each board map with its snakes and ladders
+  const activeMapNames = BOARD_MAPS.map(m => m.name);
+
+  // 1. Create or update the 5 active maps
+  const createdMaps = [];
   for (const mapData of BOARD_MAPS) {
     const map = await prisma.boardMap.upsert({
       where: { name: mapData.name },
@@ -67,7 +115,10 @@ async function seedBoardMaps() {
       },
     });
 
-    console.log(`Configured ${mapData.name} (ID: ${map.id})`);
+    createdMaps.push(map);
+
+    // Delete existing rules for this map to replace cleanly
+    await prisma.boardRule.deleteMany({ where: { mapId: map.id } });
 
     // Build rules: snakes (no endPos) + ladders (with endPos)
     const rules = [
@@ -87,18 +138,39 @@ async function seedBoardMaps() {
 
     await prisma.boardRule.createMany({
       data: rules,
-      skipDuplicates: true,
     });
 
+    console.log(`Configured ${mapData.name} (ID: ${map.id})`);
     console.log(`   Snakes: ${mapData.snakes.length} positions`);
     console.log(`   Ladders: ${mapData.ladders.length} (${mapData.ladders.map(l => `${l.start}->${l.end}`).join(', ')})`);
   }
 
-  console.log('\nBoard maps seeded successfully!');
-  console.log('\nSummary:');
-  console.log(`   Total Maps: ${BOARD_MAPS.length}`);
-  console.log(`   Snakes per Map: ~31`);
-  console.log(`   Ladders per Map: 8`);
+  // 2. Reassign any teams that were assigned to maps outside Map-1..Map-5
+  const extraMaps = await prisma.boardMap.findMany({
+    where: { name: { notIn: activeMapNames } },
+  });
+
+  if (extraMaps.length > 0) {
+    const extraMapIds = extraMaps.map(m => m.id);
+    const teamsOnExtraMaps = await prisma.team.findMany({
+      where: { mapId: { in: extraMapIds } },
+    });
+
+    for (let i = 0; i < teamsOnExtraMaps.length; i++) {
+      const targetMap = createdMaps[i % createdMaps.length];
+      await prisma.team.update({
+        where: { id: teamsOnExtraMaps[i].id },
+        data: { mapId: targetMap.id },
+      });
+    }
+
+    // Delete extra board rules and maps
+    await prisma.boardRule.deleteMany({ where: { mapId: { in: extraMapIds } } });
+    await prisma.boardMap.deleteMany({ where: { id: { in: extraMapIds } } });
+    console.log(`🧹 Cleaned up ${extraMaps.length} old maps (${extraMaps.map(m => m.name).join(', ')})`);
+  }
+
+  console.log('\nBoard maps seeded successfully! Exactly 5 maps configured.');
 }
 
 async function main() {
