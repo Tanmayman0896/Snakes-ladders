@@ -4,7 +4,7 @@ const GAME_CONFIG = {
   DICE_MIN: 1,
   DICE_MAX: 6,
   TOTAL_ROOMS: 15,
-  TOTAL_TEAMS: 50,
+  TOTAL_TEAMS: 60,
   TEAMS_PER_ROOM: 7,
   TOTAL_MAPS: 5,
   SNAKE_PENALTY_SECONDS: 180, // 3 minutes in seconds

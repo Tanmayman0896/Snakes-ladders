@@ -47,9 +47,9 @@ async function main() {
     console.log(`✅ Superadmin created/updated: ${username} (password: super123)`);
   }
 
-  // 5. Create 10 Admins
-  console.log('\n--- 5. Seeding 10 Admins ---');
-  for (let i = 1; i <= 10; i++) {
+  // 5. Create 40 Admins
+  console.log('\n--- 5. Seeding 40 Admins ---');
+  for (let i = 1; i <= 40; i++) {
     const username = `ADMIN${String(i).padStart(3, '0')}`;
     await prisma.user.upsert({
       where: { username },
@@ -66,8 +66,8 @@ async function main() {
     console.log(`✅ Admin created/updated: ${username} (password: admin123)`);
   }
 
-  // 6. Create 10 Teams and Participant Logins
-  console.log('\n--- 6. Seeding 10 Participant Teams ---');
+  // 6. Create 40 Teams and Participant Logins
+  console.log('\n--- 6. Seeding 40 Participant Teams ---');
   const allMaps = await prisma.boardMap.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } });
   const defaultMapId = allMaps.length > 0 ? allMaps[0].id : null;
 
@@ -82,14 +82,59 @@ async function main() {
     'Team Hotel',
     'Team India',
     'Team Juliet',
+    'Team Kilo',
+    'Team Lima',
+    'Team Mike',
+    'Team November',
+    'Team Oscar',
+    'Team Papa',
+    'Team Quebec',
+    'Team Romeo',
+    'Team Sierra',
+    'Team Tango',
+    'Team Uniform',
+    'Team Victor',
+    'Team Whiskey',
+    'Team X-ray',
+    'Team Yankee',
+    'Team Zulu',
+    'Team Titan',
+    'Team Phoenix',
+    'Team Nexus',
+    'Team Cyber',
+    'Team Vortex',
+    'Team Apex',
+    'Team Quantum',
+    'Team Falcon',
+    'Team Shadow',
+    'Team Viper',
+    'Team Blaze',
+    'Team Storm',
+    'Team Cipher',
+    'Team Pulse',
+    'Team Aurora',
+    'Team Comet',
+    'Team Eclipse',
+    'Team Galaxy',
+    'Team Horizon',
+    'Team Infinity',
+    'Team Nebula',
+    'Team Nova',
+    'Team Orbit',
+    'Team Polaris',
+    'Team Pulsar',
+    'Team Quasar',
+    'Team Solar',
+    'Team Spectre',
+    'Team Stellar',
+    'Team Zenith',
+    'Team Chronos',
+    'Team Genesis',
+    'Team Matrix',
+    'Team Odyssey',
   ];
 
-  const rooms = [
-    'AB1 209', 'AB1 210', 'AB1 211', 'AB1 217', 'AB1 225',
-    'AB1 311', 'AB1 312', 'AB1 319', 'AB1 320',
-  ];
-
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 60; i++) {
     const teamCode = `TEAM${String(i).padStart(3, '0')}`;
     const teamName = teamNames[i - 1];
     const assignedRoom = 'AB1 307';
