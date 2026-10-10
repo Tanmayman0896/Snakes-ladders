@@ -1,10 +1,13 @@
 const prisma = require('../../config/db');
 
 /**
- * Get available questions for a team based on position type
+ * Get available questions for a team based on position type and block number
  * Excludes questions already assigned to this team
+ * For CODING questions:
+ *   - Block <= 80: Easy coding questions (isLadderQuestion = false)
+ *   - Block > 80:  Hard coding questions (isLadderQuestion = true)
  */
-const getAvailableQuestions = async (teamId, isSnakePosition, isLadderPosition = false) => {
+const getAvailableQuestions = async (teamId, isSnakePosition, isLadderPosition = false, currentPosition = 1) => {
   // Get all questions already assigned to this team
   const assignedQuestions = await prisma.questionAssignment.findMany({
     where: { 
@@ -14,15 +17,20 @@ const getAvailableQuestions = async (teamId, isSnakePosition, isLadderPosition =
   });
 
   const assignedQuestionIds = assignedQuestions.map(q => q.questionId);
+  const isHardCoding = currentPosition > 80;
 
   // Build query filters
   const whereClause = {
     id: { notIn: assignedQuestionIds }, // Exclude already assigned questions
+    isActive: true,
   };
 
   if (isSnakePosition || isLadderPosition) {
     // Snakes and Ladders: strictly CODING / Output-based questions
+    // After block 80 -> Hard coding questions (isLadderQuestion: true)
+    // Up to block 80 -> Easy coding questions (isLadderQuestion: false)
     whereClause.type = 'CODING';
+    whereClause.isLadderQuestion = isHardCoding;
   } else {
     // Blank block (Normal): strictly NUMERICAL, PHYSICAL, or MCQ questions
     whereClause.type = { in: ['NUMERICAL', 'PHYSICAL', 'MCQ'] };
@@ -42,15 +50,17 @@ const getAvailableQuestions = async (teamId, isSnakePosition, isLadderPosition =
  * Select a random question for a team
  * Returns question and determines room type needed
  */
-const selectRandomQuestion = async (teamId, isSnakePosition, isLadderPosition = false) => {
-  let availableQuestions = await getAvailableQuestions(teamId, isSnakePosition, isLadderPosition);
+const selectRandomQuestion = async (teamId, isSnakePosition, isLadderPosition = false, currentPosition = 1) => {
+  let availableQuestions = await getAvailableQuestions(teamId, isSnakePosition, isLadderPosition, currentPosition);
+  const isHardCoding = currentPosition > 80;
 
-  // If no questions available (all used by this team), allow reuse from full active pool
+  // If no questions available (all used by this team), allow reuse from full active pool of matching difficulty
   if (availableQuestions.length === 0) {
     const whereClause = { isActive: true };
 
     if (isSnakePosition || isLadderPosition) {
       whereClause.type = 'CODING';
+      whereClause.isLadderQuestion = isHardCoding;
     } else {
       whereClause.type = { in: ['NUMERICAL', 'PHYSICAL', 'MCQ'] };
       whereClause.isSnakeQuestion = false;
@@ -60,6 +70,13 @@ const selectRandomQuestion = async (teamId, isSnakePosition, isLadderPosition = 
     availableQuestions = await prisma.question.findMany({
       where: whereClause,
     });
+
+    // Final fallback for CODING: any active CODING question if tier pool is empty
+    if (availableQuestions.length === 0 && (isSnakePosition || isLadderPosition)) {
+      availableQuestions = await prisma.question.findMany({
+        where: { isActive: true, type: 'CODING' },
+      });
+    }
 
     if (availableQuestions.length === 0) {
       throw new Error(`No available ${isSnakePosition || isLadderPosition ? 'coding' : 'blank block'} questions exist in database.`);

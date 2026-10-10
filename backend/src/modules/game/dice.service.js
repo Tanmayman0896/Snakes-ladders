@@ -116,8 +116,8 @@ const processDiceRoll = async (teamId) => {
   const isLadderPosition = ladder !== null;
   const ladderEndPos = isLadderPosition ? ladder.endPos : null;
 
-  // Automatically select question based on position type (even at position 150)
-  const {question, roomType} = await selectRandomQuestion(teamId, isSnakePosition, isLadderPosition);
+  // Automatically select question based on position type and block number (Hard coding after block 80)
+  const {question, roomType} = await selectRandomQuestion(teamId, isSnakePosition, isLadderPosition, positionAfter);
 
   // Get new room based on question type (TECH or NON_TECH)
   const newRoom = await getRandomRoom(team.currentRoom, teamId, roomType);
