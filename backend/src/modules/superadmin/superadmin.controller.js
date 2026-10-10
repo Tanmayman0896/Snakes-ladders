@@ -279,6 +279,25 @@ const autoAssignTeamRoom = async (req, res, next) => {
   }
 };
 
+const setGameLock = async (req, res, next) => {
+  try {
+    const { locked } = req.body;
+    const isLocked = await superadminService.setGameLock(locked);
+    return sendSuccess(res, { locked: isLocked }, isLocked ? 'Game locked successfully' : 'Game unlocked successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getSystemSettings = async (req, res, next) => {
+  try {
+    const settings = await superadminService.getSystemSettings();
+    return sendSuccess(res, settings, 'System settings fetched successfully');
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createTeam,
   updateTeamPassword,
@@ -300,5 +319,7 @@ module.exports = {
   getAllMaps,
   getAuditLogs,
   getRoomCapacity,
+  setGameLock,
+  getSystemSettings,
 };
 
