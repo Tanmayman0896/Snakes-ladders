@@ -174,8 +174,9 @@ export function QuestionPanel({
         )}
 
         {!submitResult && (
-          <div className="space-y-4">{/* MCQ Type - Radio Buttons */}
-            {questionType === "MCQ" && options.length > 0 && (
+          <div className="space-y-4">
+            {/* Options Selection (Radio Buttons for MCQ or NUMERICAL with options) */}
+            {(questionType === "MCQ" || (questionType === "NUMERICAL" && options.length > 0)) && options.length > 0 && (
               <div className="space-y-3">
                 <Label>Select your answer:</Label>
                 <RadioGroup value={answer} onValueChange={setAnswer} className="space-y-2">
@@ -190,8 +191,8 @@ export function QuestionPanel({
               </div>
             )}
 
-            {/* NUMERICAL Type - Number Input */}
-            {questionType === "NUMERICAL" && (
+            {/* NUMERICAL Type - Number Input (when no options) */}
+            {questionType === "NUMERICAL" && options.length === 0 && (
               <div>
                 <Label htmlFor="answer">Your Answer (Number)</Label>
                 <Input

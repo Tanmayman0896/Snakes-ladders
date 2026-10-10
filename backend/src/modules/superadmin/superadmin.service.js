@@ -503,6 +503,25 @@ const getRoomCapacity = async () => {
   });
 };
 
+const setGameLock = async (locked) => {
+  const value = locked ? 'true' : 'false';
+  const setting = await prisma.systemSettings.upsert({
+    where: { key: 'locked' },
+    update: { value },
+    create: { id: 'locked', key: 'locked', value },
+  });
+  return setting.value === 'true';
+};
+
+const getSystemSettings = async () => {
+  const data = await prisma.systemSettings.findMany();
+  const result = {};
+  for (const obj of data) {
+    result[obj.key] = obj.value;
+  }
+  return result;
+};
+
 module.exports = {
   createTeam,
   updateTeamPassword,
@@ -523,5 +542,7 @@ module.exports = {
   getAllMaps: getAllBoardMaps,
   findAvailableRoom,
   getRoomCapacity,
+  setGameLock,
+  getSystemSettings,
 };
 

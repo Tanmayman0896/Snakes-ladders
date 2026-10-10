@@ -92,6 +92,39 @@ export default function SuperAdminDashboard() {
     maxTeams: number,
     available: boolean
   }>>([])
+  const [isGameLocked, setIsGameLocked] = useState<boolean>(false)
+  const [togglingLock, setTogglingLock] = useState<boolean>(false)
+
+  // Fetch lock status from backend
+  const fetchLockStatus = async () => {
+    try {
+      const {data} = await apiService.getSystemSettings();
+      setIsGameLocked(data?.locked === 'true');
+    } catch (error) {
+      console.error("Error fetching system settings:", error);
+    }
+  }
+
+  const handleToggleLock = async () => {
+    const nextState = !isGameLocked;
+    const confirmMsg = nextState
+      ? "Are you sure you want to LOCK the game? All participants and admins will see the lock screen."
+      : "Are you sure you want to UNLOCK the game? The game will immediately be playable for everyone!";
+
+    if (!window.confirm(confirmMsg)) return;
+
+    setTogglingLock(true);
+    try {
+      await apiService.setGameLock(nextState);
+      setIsGameLocked(nextState);
+      alert(nextState ? "Game is now LOCKED! 🔒" : "Game is now UNLOCKED and LIVE! 🚀");
+    } catch (error: any) {
+      console.error("Error toggling lock:", error);
+      alert("Failed to toggle game lock: " + (error?.message || "Unknown error"));
+    } finally {
+      setTogglingLock(false);
+    }
+  };
 
   // Fetch maps from backend
   const fetchMaps = async () => {
@@ -179,12 +212,14 @@ export default function SuperAdminDashboard() {
       fetchQuestions()
       fetchMaps()
       fetchRoomCapacities()
+      fetchLockStatus()
 
       // Auto-refresh teams, room capacities, and sync positions every 10 seconds
       const interval = setInterval(() => {
         fetchTeams()
         fetchRoomCapacities()
         fetchActivityLogs()
+        fetchLockStatus()
       }, 10000)
       return () => clearInterval(interval)
     }
@@ -230,9 +265,9 @@ export default function SuperAdminDashboard() {
 
       // Show the generated credentials
       if (data) {
-        const team = data.data
-        const mapInfo = team.map ? `\nAuto-assigned Map: ${team.map.name}` : ''
-        alert(`Team created successfully!\n\nLogin Username: ${team.loginUsername || team.teamCode}\nPassword: ${team.generatedPassword}${mapInfo}\n\nPlease save these credentials!`)
+        const team = data.data || data
+        const mapInfo = team?.map ? `\nAuto-assigned Map: ${team.map.name}` : ''
+        alert(`Team created successfully!\n\nLogin Username: ${team?.loginUsername || team?.teamCode}\nPassword: ${team?.generatedPassword}${mapInfo}\n\nPlease save these credentials!`)
       }
 
       setNewTeamId("")
@@ -447,48 +482,71 @@ export default function SuperAdminDashboard() {
       <Navbar role="superadmin"/>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-wrap gap-4 mb-8 border-b border-gray-200 pb-4">
-          <button
-            onClick={() => setActiveTab("leaderboard")}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === "leaderboard"
-                ? "text-gray-900 border-b-2 border-gray-900"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Leaderboard
-          </button>
-          <button
-            onClick={() => setActiveTab("teams")}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === "teams" ? "text-gray-900 border-b-2 border-gray-900" : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Teams
-          </button>
-          <button
-            onClick={() => setActiveTab("questions")}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === "questions"
-                ? "text-gray-900 border-b-2 border-gray-900"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Questions
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("activity")
-              fetchActivityLogs()
-            }}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === "activity"
-                ? "text-gray-900 border-b-2 border-gray-900"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Activity Log
-          </button>
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-gray-200 pb-4">
+          <div className="flex flex-wrap gap-4">
+            <button
+              onClick={() => setActiveTab("leaderboard")}
+              className={`px-4 py-2 font-medium transition-colors ${
+                activeTab === "leaderboard"
+                  ? "text-gray-900 border-b-2 border-gray-900"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Leaderboard
+            </button>
+            <button
+              onClick={() => setActiveTab("teams")}
+              className={`px-4 py-2 font-medium transition-colors ${
+                activeTab === "teams" ? "text-gray-900 border-b-2 border-gray-900" : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Teams
+            </button>
+            <button
+              onClick={() => setActiveTab("questions")}
+              className={`px-4 py-2 font-medium transition-colors ${
+                activeTab === "questions"
+                  ? "text-gray-900 border-b-2 border-gray-900"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Questions
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("activity")
+                fetchActivityLogs()
+              }}
+              className={`px-4 py-2 font-medium transition-colors ${
+                activeTab === "activity"
+                  ? "text-gray-900 border-b-2 border-gray-900"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Activity Log
+            </button>
+          </div>
+
+          {/* Game Lock Status & Control */}
+          <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-xl border border-gray-200">
+            <div className="flex items-center gap-2">
+              <span className={`inline-block w-2.5 h-2.5 rounded-full ${isGameLocked ? "bg-amber-500 animate-pulse" : "bg-emerald-500"}`} />
+              <span className="text-xs sm:text-sm font-semibold text-gray-800">
+                {isGameLocked ? "Status: LOCKED" : "Status: LIVE"}
+              </span>
+            </div>
+            <button
+              onClick={handleToggleLock}
+              disabled={togglingLock}
+              className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all shadow-sm disabled:opacity-50 ${
+                isGameLocked
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : "bg-amber-600 hover:bg-amber-700 text-white"
+              }`}
+            >
+              {togglingLock ? "Updating..." : isGameLocked ? "🔓 Unlock Game" : "🔒 Lock Game"}
+            </button>
+          </div>
         </div>
 
         {activeTab === "leaderboard" && (
@@ -871,7 +929,7 @@ export default function SuperAdminDashboard() {
                         </span>
                       )}
                     </div>
-                    {question.type === "MCQ" && question.options && question.options.length > 0 && (
+                    {question.options && question.options.length > 0 && (
                       <p className="text-xs text-gray-500 mt-1">Options: {question.options.join(", ")}</p>
                     )}
                     {(question.type === "MCQ" || question.type === "NUMERICAL") && question.correctAnswer && (

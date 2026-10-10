@@ -20,16 +20,12 @@ const getAvailableQuestions = async (teamId, isSnakePosition, isLadderPosition =
     id: { notIn: assignedQuestionIds }, // Exclude already assigned questions
   };
 
-  if (isLadderPosition) {
-    // Ladder position: Hard technical CODING questions with isLadderQuestion = true
+  if (isSnakePosition || isLadderPosition) {
+    // Snakes and Ladders: strictly CODING / Output-based questions
     whereClause.type = 'CODING';
-    whereClause.isLadderQuestion = true;
-  } else if (isSnakePosition) {
-    // Snake position: Only CODING questions with isSnakeQuestion = true
-    whereClause.type = 'CODING';
-    whereClause.isSnakeQuestion = true;
   } else {
-    // Normal position: Any question type, not snake or ladder questions
+    // Blank block (Normal): strictly NUMERICAL, PHYSICAL, or MCQ questions
+    whereClause.type = { in: ['NUMERICAL', 'PHYSICAL', 'MCQ'] };
     whereClause.isSnakeQuestion = false;
     whereClause.isLadderQuestion = false;
   }
@@ -49,67 +45,54 @@ const getAvailableQuestions = async (teamId, isSnakePosition, isLadderPosition =
 const selectRandomQuestion = async (teamId, isSnakePosition, isLadderPosition = false) => {
   let availableQuestions = await getAvailableQuestions(teamId, isSnakePosition, isLadderPosition);
 
-  // If no questions available (all used by this team), allow reuse
+  // If no questions available (all used by this team), allow reuse from full active pool
   if (availableQuestions.length === 0) {
-    // Get all questions matching the criteria (allow reuse)
-    const whereClause = {};
-    
-    if (isLadderPosition) {
+    const whereClause = { isActive: true };
+
+    if (isSnakePosition || isLadderPosition) {
       whereClause.type = 'CODING';
-      whereClause.isLadderQuestion = true;
-    } else if (isSnakePosition) {
-      whereClause.type = 'CODING';
-      whereClause.isSnakeQuestion = true;
     } else {
+      whereClause.type = { in: ['NUMERICAL', 'PHYSICAL', 'MCQ'] };
       whereClause.isSnakeQuestion = false;
       whereClause.isLadderQuestion = false;
     }
-    
+
     availableQuestions = await prisma.question.findMany({
       where: whereClause,
     });
-    
-    // If still no questions found, fallback to any active question
-    if (availableQuestions.length === 0) {
-      availableQuestions = await prisma.question.findMany({
-        where: { isActive: true },
-      });
-    }
 
     if (availableQuestions.length === 0) {
-      throw new Error(`No questions exist in database. Please add questions to the database.`);
+      throw new Error(`No available ${isSnakePosition || isLadderPosition ? 'coding' : 'blank block'} questions exist in database.`);
     }
   }
 
-  // For normal positions, weight question types
-  // 30% CODING, 70% others (NUMERICAL, MCQ, PHYSICAL)
   let selectedQuestion;
 
-  if (!isSnakePosition && !isLadderPosition) {
-    const codingQuestions = availableQuestions.filter(q => q.type === 'CODING');
-    const otherQuestions = availableQuestions.filter(q => q.type !== 'CODING');
-
-    // 30% chance for coding question
-    const shouldSelectCoding = Math.random() < 0.3 && codingQuestions.length > 0;
-
-    if (shouldSelectCoding) {
-      // Pick random coding question
-      selectedQuestion = codingQuestions[Math.floor(Math.random() * codingQuestions.length)];
-    } else if (otherQuestions.length > 0) {
-      // Pick random non-coding question
-      selectedQuestion = otherQuestions[Math.floor(Math.random() * otherQuestions.length)];
-    } else if (codingQuestions.length > 0) {
-      // Fallback to coding if no other questions available
-      selectedQuestion = codingQuestions[Math.floor(Math.random() * codingQuestions.length)];
-    } else {
-      throw new Error('No available questions');
-    }
-  } else {
-    // Snake or Ladder position: Pick random from available questions
+  if (isSnakePosition || isLadderPosition) {
+    // Snake or Ladder: Pick random from CODING questions
     selectedQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+  } else {
+    // Blank block: Balanced random distribution among NUMERICAL, PHYSICAL, and MCQ
+    const numericalQuestions = availableQuestions.filter(q => q.type === 'NUMERICAL');
+    const physicalQuestions = availableQuestions.filter(q => q.type === 'PHYSICAL');
+    const mcqQuestions = availableQuestions.filter(q => q.type === 'MCQ');
+
+    const availableCategories = [];
+    if (numericalQuestions.length > 0) availableCategories.push(numericalQuestions);
+    if (physicalQuestions.length > 0) availableCategories.push(physicalQuestions);
+    if (mcqQuestions.length > 0) availableCategories.push(mcqQuestions);
+
+    if (availableCategories.length > 0) {
+      // Pick one category at random, then pick a random question from that category
+      const chosenCategory = availableCategories[Math.floor(Math.random() * availableCategories.length)];
+      selectedQuestion = chosenCategory[Math.floor(Math.random() * chosenCategory.length)];
+    } else {
+      selectedQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+    }
   }
 
   // Determine room type based on question type
+  // CODING questions require TECH rooms; NUMERICAL, PHYSICAL, and MCQ use NON_TECH rooms
   const roomType = selectedQuestion.type === 'CODING' ? 'TECH' : 'NON_TECH';
 
   return {

@@ -241,6 +241,13 @@ class ApiService {
   async getSystemSettings(): Promise<any> {
     return this.request('/auth/settings');
   }
+
+  async setGameLock(locked: boolean): Promise<any> {
+    return this.request('/settings/lock', {
+      method: 'POST',
+      body: JSON.stringify({ locked }),
+    });
+  }
 }
 
 export const apiService = new ApiService();

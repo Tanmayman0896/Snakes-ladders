@@ -56,3 +56,6 @@ prisma/*.db-journal
 .turbo
 /backend/data/Teams.csv
 /backend/data/Admins.csv
+/backend/data/credentials.json
+*credentials*
+*.credentials.*

@@ -69,5 +69,9 @@ router.delete('/board/snakes/:snakeId', superadminController.removeSnake);
 // Get audit logs
 router.get('/audit-logs', superadminController.getAuditLogs);
 
+// System settings & lock control
+router.get('/settings', superadminController.getSystemSettings);
+router.post('/settings/lock', superadminController.setGameLock);
+
 module.exports = router;
 

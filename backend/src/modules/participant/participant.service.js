@@ -293,6 +293,69 @@ const submitAnswer = async (teamId, assignmentId, answer) => {
     const correctAnswer = question.correctAnswer?.trim().toLowerCase();
 
     isCorrect = submittedAnswer === correctAnswer;
+
+    // Additional matching logic:
+    if (!isCorrect) {
+      // 1. Option letter vs Option text matching (if options array exists)
+      if (question.options && question.options.length > 0) {
+        const letters = ['a', 'b', 'c', 'd', 'e'];
+        const correctIndex = question.options.findIndex(
+          opt => opt.trim().toLowerCase() === correctAnswer
+        );
+
+        const submittedIdx = letters.indexOf(submittedAnswer);
+        if (submittedIdx !== -1 && submittedIdx === correctIndex) {
+          isCorrect = true;
+        } else if (correctAnswer && letters.includes(correctAnswer)) {
+          const targetIdx = letters.indexOf(correctAnswer);
+          if (question.options[targetIdx]?.trim().toLowerCase() === submittedAnswer) {
+            isCorrect = true;
+          }
+        }
+      }
+
+      // 2. Clean alphanumeric matching (removes ₹, commas, %, 'bytes', spaces)
+      if (!isCorrect && correctAnswer) {
+        const cleanSubmitted = submittedAnswer.replace(/[^0-9a-z.-]/gi, '');
+        const cleanCorrect = correctAnswer.replace(/[^0-9a-z.-]/gi, '');
+        if (cleanSubmitted && cleanCorrect && cleanSubmitted === cleanCorrect) {
+          isCorrect = true;
+        }
+      }
+
+      // 3. Flexible dual-valid checks for tricky aptitude questions
+      if (!isCorrect) {
+        // H6: 40 km/h or 45 km/h
+        if (question.text.includes('1/3 of a journey at 30 km/h') && (submittedAnswer.includes('40') || submittedAnswer.includes('45') || submittedAnswer === 'a' || submittedAnswer === 'b')) {
+          isCorrect = true;
+        }
+        // H7: 20 or 21
+        if (question.text.includes('average height of 160 cm') && (submittedAnswer === '20' || submittedAnswer === '21' || submittedAnswer === 'b' || submittedAnswer === 'c')) {
+          isCorrect = true;
+        }
+        // H8: 47 or 74
+        if (question.text.includes('digits whose sum is 11') && (submittedAnswer === '47' || submittedAnswer === '74' || submittedAnswer === 'a' || submittedAnswer === 'd')) {
+          isCorrect = true;
+        }
+        // H9: 4 or 8
+        if (question.text.includes('father is 4 times as old') && (submittedAnswer === '4' || submittedAnswer === '8' || submittedAnswer === 'a' || submittedAnswer === 'c')) {
+          isCorrect = true;
+        }
+        // Binary rotation: 01011010 or 1011010
+        if (question.text.includes('circular left rotation on 10010110') && (submittedAnswer === '01011010' || submittedAnswer === '1011010')) {
+          isCorrect = true;
+        }
+        // Binary addition: 11000 or 24
+        if (question.text.includes('(1011)₂+(1101)₂') && (submittedAnswer === '11000' || submittedAnswer === '24' || submittedAnswer.includes('11000'))) {
+          isCorrect = true;
+        }
+        // Shift left: 180 or 10110100
+        if (question.text.includes('Shift (101101)₂ left by 2') && (submittedAnswer.includes('180') || submittedAnswer.includes('10110100'))) {
+          isCorrect = true;
+        }
+      }
+    }
+
     newStatus = isCorrect ? 'CORRECT' : 'INCORRECT';
   }
 
