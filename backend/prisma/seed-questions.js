@@ -1232,8 +1232,18 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
+    "text": "What decimal value does the 8-bit two's-complement number 11101101 represent?",
+    "hint": "Category: Bitwise / 2's Complement. Solve step-by-step and write the exact signed integer value.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [],
+    "correctAnswer": "-19",
+    "isActive": true
+  },
+  {
     "text": "Convert (243)₅ into decimal.",
-    "hint": "Category: Number System. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Number Systems. Multiply digits by powers of 5 and sum them up.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1243,7 +1253,7 @@ const USER_QUESTIONS = [
   },
   {
     "text": "Convert (2B)₁₂ into decimal, where A = 10 and B = 11.",
-    "hint": "Category: Number System. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Number Systems. Multiply digits by powers of 12 and sum them up.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1252,98 +1262,18 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "If (x3)₇ = 45₁₀, find x.",
-    "hint": "Category: Number System. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "6",
-    "isActive": true
-  },
-  {
-    "text": "Express decimal 94 in base 5.",
-    "hint": "Category: Number System. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "(334)₅",
-    "isActive": true
-  },
-  {
-    "text": "Which is larger: (132)₄ or (101)₅?",
-    "hint": "Category: Number System. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "(132)₄",
-    "isActive": true
-  },
-  {
-    "text": "Toggle the 3rd bit from the right in 10110110₂.",
-    "hint": "Category: Bitwise / Complement. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "10110010₂",
-    "isActive": true
-  },
-  {
     "text": "Perform a 2-bit circular left rotation on 10010110.",
-    "hint": "Category: Bitwise / Complement. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Bitwise Operations. Move the 2 most significant bits to the least significant positions.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
     "options": [],
-    "correctAnswer": "1011010",
-    "isActive": true
-  },
-  {
-    "text": "Clear the last 3 bits of 11011101₂.",
-    "hint": "Category: Bitwise / Complement. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "11011000₂",
-    "isActive": true
-  },
-  {
-    "text": "Evaluate (42 | 5) & 31.",
-    "hint": "Category: Bitwise / Complement. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "15",
-    "isActive": true
-  },
-  {
-    "text": "What decimal value does the 8-bit two's-complement number 11101101 represent?",
-    "hint": "Category: Bitwise / Complement. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "-19",
-    "isActive": true
-  },
-  {
-    "text": "Find the output: int x=4; int y=x++ + ++x; System.out.println(x); System.out.println(y);",
-    "hint": "Category: Operators / Loops. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "x = 6, y = 10",
+    "correctAnswer": "01011010",
     "isActive": true
   },
   {
     "text": "Find the final value of n: int n=5; for(int i=1;i<=n;i++) n-=i;",
-    "hint": "Category: Operators / Loops. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Loops & Tracing. Trace the loop iteration-by-iteration carefully checking the loop condition.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1353,7 +1283,7 @@ const USER_QUESTIONS = [
   },
   {
     "text": "Find the output: int sum=0; for(int i=1;i<=10;i++){ if(i%3==0) continue; sum+=i; } System.out.println(sum);",
-    "hint": "Category: Operators / Loops. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Loops & Control Flow. Sum numbers from 1 to 10 that are not multiples of 3.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1362,18 +1292,8 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "Find the final value of sum: int sum=0; for(int i=1;i<=3;i++) for(int j=1;j<=i;j++) sum+=i*j;",
-    "hint": "Category: Operators / Loops. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "25",
-    "isActive": true
-  },
-  {
     "text": "Find the final value of x: int x=2; for(int i=0;i<4;i++) x=x*2-i;",
-    "hint": "Category: Operators / Loops. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Loops & Expressions. Trace step-by-step for i = 0, 1, 2, 3.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1383,7 +1303,7 @@ const USER_QUESTIONS = [
   },
   {
     "text": "Find the smallest 3-digit number divisible by both 7 and 9.",
-    "hint": "Category: Slightly Tricky. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Number Theory. Find LCM(7, 9) and the first 3-digit multiple.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1393,7 +1313,7 @@ const USER_QUESTIONS = [
   },
   {
     "text": "Find the largest 4-digit number divisible by both 12 and 15.",
-    "hint": "Category: Slightly Tricky. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Number Theory. Find LCM(12, 15) and calculate largest multiple <= 9999.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1403,7 +1323,7 @@ const USER_QUESTIONS = [
   },
   {
     "text": "How many integers from 1 to 100 are divisible by neither 2 nor 3?",
-    "hint": "Category: Slightly Tricky. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Combinatorics / Inclusion-Exclusion. Total - Divisible by 2 - Divisible by 3 + Divisible by 6.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1412,38 +1332,18 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "What is the output? byte b=127; b=(byte)(b+1); System.out.println(b);",
-    "hint": "Category: Slightly Tricky. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "-128",
-    "isActive": true
-  },
-  {
-    "text": "What is the output? int n=58372; int x=n%1000; System.out.println(x);",
-    "hint": "Category: Slightly Tricky. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "372",
-    "isActive": true
-  },
-  {
     "text": "Perform binary addition: (1011)₂+(1101)₂",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Binary Arithmetic. Add the two binary numbers directly or convert to decimal and back.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
     "options": [],
-    "correctAnswer": "11000₂ = 24₁₀",
+    "correctAnswer": "11000",
     "isActive": true
   },
   {
     "text": "Find the loop count: for(i = 0; i < 20; i++).",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Loop Execution Count. How many times will this loop iterate from 0 to 19?",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1452,28 +1352,8 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "Convert (156)8 to binary.",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "1101110",
-    "isActive": true
-  },
-  {
-    "text": "How many bits are required to represent decimal 255?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "8 bits",
-    "isActive": true
-  },
-  {
     "text": "Evaluate 1<<5",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Bitwise Shift. Left-shifting 1 by 5 positions equals 2⁵.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1482,18 +1362,8 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "Evaluate 64>>3",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "8",
-    "isActive": true
-  },
-  {
     "text": "Find the decimal value of (10101010)2",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Binary to Decimal. Sum powers of 2 for each set bit: 128 + 32 + 8 + 2.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1502,48 +1372,8 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "Evaluate 12 & 10",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "8",
-    "isActive": true
-  },
-  {
-    "text": "Convert decimal 725 to hexadecimal.",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "2D5",
-    "isActive": true
-  },
-  {
-    "text": "Find the decimal result of (10110110)2⊕(11001101)2",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "123",
-    "isActive": true
-  },
-  {
-    "text": "Evaluate (3≪5)+(64≫2)",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "112",
-    "isActive": true
-  },
-  {
     "text": "Find the loop count: for(i = 1; i <= 500; i *= 2).",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Loop Complexity. Count powers of 2 starting at 1 up to 500 (1, 2, 4, ..., 256).",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1552,68 +1382,8 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "Evaluate (1≪10)−(1≪4)",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "1008",
-    "isActive": true
-  },
-  {
-    "text": "Find the number of set bits in (111011101101)2",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "10",
-    "isActive": true
-  },
-  {
-    "text": "Find the loop count for while(i != 0) { i /= 2; } when i=150",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "8",
-    "isActive": true
-  },
-  {
-    "text": "For how many values from 11 to 250 is i % 15 == 0 true?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "16",
-    "isActive": true
-  },
-  {
-    "text": "Evaluate 250−(10110101)2",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "69",
-    "isActive": true
-  },
-  {
-    "text": "Evaluate (1≪12)−(1≪7)+(1≪3)",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "3976",
-    "isActive": true
-  },
-  {
     "text": "Find the 2's complement of (10110101)2 using 8 bits and give its decimal value.",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: 2's Complement. Invert bits of 10110101 to get 01001010, add 1 = 01001011 = 75 in decimal.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1622,98 +1392,8 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "Perform a 2-bit circular right rotation on (11010010)2",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "10110100",
-    "isActive": true
-  },
-  {
-    "text": "Binary search is performed on a sorted array containing 1024 elements. What is the maximum number of comparisons required to find an element?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "10",
-    "isActive": true
-  },
-  {
-    "text": "A sorting algorithm takes 2 seconds for 1,000 elements and its running time is proportional to n2. Approximately how long will it take for 5,000 elements?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "50",
-    "isActive": true
-  },
-  {
-    "text": "A program reduces the problem size by half after every iteration. Starting with n=512, how many iterations are required to reach n=1?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "9",
-    "isActive": true
-  },
-  {
-    "text": "An integer array contains 50 elements, with each integer occupying 4 bytes. How many bytes of memory does the array require?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "200 bytes",
-    "isActive": true
-  },
-  {
-    "text": "A 2D array has dimensions 6 × 8, and each element occupies 4 bytes. What is the total memory required?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "192 bytes",
-    "isActive": true
-  },
-  {
-    "text": "An 8-bit unsigned number is stored in a register. What is the maximum decimal value that can be represented?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "255",
-    "isActive": true
-  },
-  {
-    "text": "An array has 2,000 elements. If 3 operations are performed for each element, how many operations are performed in total?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "6000",
-    "isActive": true
-  },
-  {
-    "text": "Shift (101101)₂ left by 2 positions. Find the result in binary and decimal.",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
-    "type": "NUMERICAL",
-    "isSnakeQuestion": false,
-    "isLadderQuestion": false,
-    "options": [],
-    "correctAnswer": "10110100₂ = 180",
-    "isActive": true
-  },
-  {
     "text": "Which is larger: (203)4 or (123)5?",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "hint": "Category: Base Comparison. Convert (203)₄ = 35 and (123)₅ = 38 to decimal.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
@@ -1722,13 +1402,483 @@ const USER_QUESTIONS = [
     "isActive": true
   },
   {
-    "text": "If (x2)₅ = 17₁₀, find x",
-    "hint": "Category: Numerical. Solve step-by-step and write the exact numerical answer.",
+    "text": "Shift (101101)₂ left by 2 positions. Find the result in binary and decimal.",
+    "hint": "Category: Bitwise Shift. 10110100₂ in binary equals 180 in decimal.",
     "type": "NUMERICAL",
     "isSnakeQuestion": false,
     "isLadderQuestion": false,
     "options": [],
-    "correctAnswer": "3",
+    "correctAnswer": "180",
+    "isActive": true
+  },
+  {
+    "text": "An array has 2,000 elements. If 3 operations are performed for each element, how many operations are performed in total?",
+    "hint": "Category: Algorithmic Operations. Multiply total elements by operations per element.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [],
+    "correctAnswer": "6000",
+    "isActive": true
+  },
+  {
+    "text": "An integer array contains 50 elements, with each integer occupying 4 bytes. How many bytes of memory does the array require?",
+    "hint": "Category: Memory Allocation. Multiply 50 elements by 4 bytes per element.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [],
+    "correctAnswer": "200",
+    "isActive": true
+  },
+  {
+    "text": "What is 25% of 240?",
+    "hint": "Aptitude (Easy): Calculate 25% (one quarter) of 240.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "40",
+      "50",
+      "60",
+      "70"
+    ],
+    "correctAnswer": "60",
+    "isActive": true
+  },
+  {
+    "text": "A product costs ₹800 and is sold for ₹920. What is the profit percentage?",
+    "hint": "Aptitude (Easy): Profit = ₹120 on cost price ₹800.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "10%",
+      "12%",
+      "15%",
+      "20%"
+    ],
+    "correctAnswer": "15%",
+    "isActive": true
+  },
+  {
+    "text": "If 3x + 6 = 21, what is the value of x?",
+    "hint": "Aptitude (Easy): Solve 3x = 21 - 6.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "correctAnswer": "5",
+    "isActive": true
+  },
+  {
+    "text": "What is the average of 12, 18, 20 and 30?",
+    "hint": "Aptitude (Easy): Sum all 4 numbers and divide by 4.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "18",
+      "20",
+      "22",
+      "24"
+    ],
+    "correctAnswer": "20",
+    "isActive": true
+  },
+  {
+    "text": "A train travels 240 km in 4 hours. What is its average speed?",
+    "hint": "Aptitude (Easy): Speed = Distance / Time.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "50 km/h",
+      "60 km/h",
+      "70 km/h",
+      "80 km/h"
+    ],
+    "correctAnswer": "60 km/h",
+    "isActive": true
+  },
+  {
+    "text": "What is the value of 15² - 10²?",
+    "hint": "Aptitude (Easy): Calculate 225 - 100.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "100",
+      "125",
+      "150",
+      "175"
+    ],
+    "correctAnswer": "125",
+    "isActive": true
+  },
+  {
+    "text": "What is the LCM of 8 and 12?",
+    "hint": "Aptitude (Easy): Find the least common multiple of 8 and 12.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "16",
+      "20",
+      "24",
+      "32"
+    ],
+    "correctAnswer": "24",
+    "isActive": true
+  },
+  {
+    "text": "A number is increased by 20% and becomes 120. What was the original number?",
+    "hint": "Aptitude (Easy): Original * 1.20 = 120.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "90",
+      "100",
+      "110",
+      "115"
+    ],
+    "correctAnswer": "100",
+    "isActive": true
+  },
+  {
+    "text": "What is the probability of getting a head when a fair coin is tossed once?",
+    "hint": "Aptitude (Easy): Single coin toss has 2 equally likely outcomes.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "1/4",
+      "1/3",
+      "1/2",
+      "1"
+    ],
+    "correctAnswer": "1/2",
+    "isActive": true
+  },
+  {
+    "text": "What is the next number in the sequence 2, 4, 8, 16, ?",
+    "hint": "Aptitude (Easy): Each number is doubled (powers of 2).",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "24",
+      "28",
+      "30",
+      "32"
+    ],
+    "correctAnswer": "32",
+    "isActive": true
+  },
+  {
+    "text": "A number is increased by 20% and then decreased by 10%. What is the net percentage change?",
+    "hint": "Aptitude (Medium): Let value = 100 -> 120 -> 108 (+8%).",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "8% increase",
+      "10% increase",
+      "8% decrease",
+      "2% increase"
+    ],
+    "correctAnswer": "8% increase",
+    "isActive": true
+  },
+  {
+    "text": "A product marked at ₹2,500 is sold after successive discounts of 20% and 10%. What is the selling price?",
+    "hint": "Aptitude (Medium): ₹2,500 * 0.80 * 0.90.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "₹1,750",
+      "₹1,800",
+      "₹1,850",
+      "₹2,000"
+    ],
+    "correctAnswer": "₹1,800",
+    "isActive": true
+  },
+  {
+    "text": "The ratio of A:B is 3:5 and B:C is 10:7. What is A:C?",
+    "hint": "Aptitude (Medium): Multiply the ratios (3/5) * (10/7) = 6/7.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "3:7",
+      "6:7",
+      "7:6",
+      "5:7"
+    ],
+    "correctAnswer": "6:7",
+    "isActive": true
+  },
+  {
+    "text": "The average of 8 numbers is 25. If one number, 39, is removed, what is the new average?",
+    "hint": "Aptitude (Medium): Sum = 200. Remaining sum = 200 - 39 = 161. Divide by 7.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "22",
+      "23",
+      "24",
+      "25"
+    ],
+    "correctAnswer": "23",
+    "isActive": true
+  },
+  {
+    "text": "A train 180 m long crosses a platform 270 m long in 18 seconds. What is the speed of the train?",
+    "hint": "Aptitude (Medium): Total distance = 450 m. Speed = 450 / 18 = 25 m/s = 90 km/h.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "72 km/h",
+      "80 km/h",
+      "90 km/h",
+      "100 km/h"
+    ],
+    "correctAnswer": "90 km/h",
+    "isActive": true
+  },
+  {
+    "text": "A and B can complete a job in 12 and 18 days respectively. How many days will they take together?",
+    "hint": "Aptitude (Medium): Combined daily work rate = 1/12 + 1/18 = 5/36.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "6 days",
+      "7.2 days",
+      "8 days",
+      "9 days"
+    ],
+    "correctAnswer": "7.2 days",
+    "isActive": true
+  },
+  {
+    "text": "A sum amounts to ₹1,440 in 2 years at 20% simple interest per annum. What is the principal?",
+    "hint": "Aptitude (Medium): Select the principal that amounts to ₹1,440 (Option C).",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "₹1,000",
+      "₹1,100",
+      "₹1,200",
+      "₹1,250"
+    ],
+    "correctAnswer": "₹1,200",
+    "isActive": true
+  },
+  {
+    "text": "A bag contains 6 red, 5 blue and 4 green balls. What is the probability of drawing a blue ball?",
+    "hint": "Aptitude (Medium): Total balls = 15. Blue balls = 5. P = 5/15.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "1/5",
+      "1/3",
+      "2/5",
+      "1/2"
+    ],
+    "correctAnswer": "1/3",
+    "isActive": true
+  },
+  {
+    "text": "How many different 3-digit numbers can be formed using 1, 2, 3, 4 and 5 without repetition?",
+    "hint": "Aptitude (Medium): Permutation 5P3 = 5 * 4 * 3.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "40",
+      "50",
+      "60",
+      "75"
+    ],
+    "correctAnswer": "60",
+    "isActive": true
+  },
+  {
+    "text": "The perimeter of a rectangle is 84 cm. Its length is 6 cm more than its width. What is its area?",
+    "hint": "Aptitude (Medium): 2(L+W) = 84 => L+W = 42. L = 24, W = 18. Area = 24 * 18.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "396 cm²",
+      "414 cm²",
+      "432 cm²",
+      "450 cm²"
+    ],
+    "correctAnswer": "432 cm²",
+    "isActive": true
+  },
+  {
+    "text": "A cyclist increases speed from 12 km/h to 15 km/h and takes 20 minutes less to cover the same distance. What is the distance?",
+    "hint": "Aptitude (Hard): d/12 - d/15 = 20/60 hours.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "15 km",
+      "18 km",
+      "20 km",
+      "24 km"
+    ],
+    "correctAnswer": "20 km",
+    "isActive": true
+  },
+  {
+    "text": "A boat travels 24 km downstream in 2 hours and the same distance upstream in 3 hours. What is the speed of the stream?",
+    "hint": "Aptitude (Hard): Downstream = 12 km/h, Upstream = 8 km/h. Stream speed = (12 - 8) / 2.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "1 km/h",
+      "2 km/h",
+      "3 km/h",
+      "4 km/h"
+    ],
+    "correctAnswer": "2 km/h",
+    "isActive": true
+  },
+  {
+    "text": "A pipe fills a tank in 6 hours while a drain empties it in 9 hours. If both are opened together, how long will the tank take to fill?",
+    "hint": "Aptitude (Hard): Net filling rate = 1/6 - 1/9 = 1/18 per hour.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "12 hours",
+      "15 hours",
+      "18 hours",
+      "24 hours"
+    ],
+    "correctAnswer": "18 hours",
+    "isActive": true
+  },
+  {
+    "text": "An amount becomes ₹1,331 in 3 years at 10% compound interest annually. What was the principal?",
+    "hint": "Aptitude (Hard): P * (1.1)³ = 1331.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "₹900",
+      "₹1,000",
+      "₹1,100",
+      "₹1,210"
+    ],
+    "correctAnswer": "₹1,000",
+    "isActive": true
+  },
+  {
+    "text": "A mixture contains milk and water in the ratio 5:2. If 14 liters of water are added, the ratio becomes 5:3. What was the original quantity of milk?",
+    "hint": "Aptitude (Hard): Let milk = 5x, water = 2x. 5x / (2x + 14) = 5/3.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "60 L",
+      "70 L",
+      "80 L",
+      "90 L"
+    ],
+    "correctAnswer": "70 L",
+    "isActive": true
+  },
+  {
+    "text": "A man travels 1/3 of a journey at 30 km/h and the remaining 2/3 at 60 km/h. What is his average speed for the whole journey?",
+    "hint": "Aptitude (Hard): Average speed = Total Distance / Total Time.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "40 km/h",
+      "45 km/h",
+      "48 km/h",
+      "50 km/h"
+    ],
+    "correctAnswer": "40 km/h",
+    "isActive": true
+  },
+  {
+    "text": "A class has an average height of 160 cm. A student of height 180 cm joins, raising the average to 160.95 cm. How many students were originally in the class?",
+    "hint": "Aptitude (Hard): (160n + 180)/(n + 1) = 160.95.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "18",
+      "20",
+      "21",
+      "22"
+    ],
+    "correctAnswer": "21",
+    "isActive": true
+  },
+  {
+    "text": "A two-digit number has digits whose sum is 11. Reversing the digits increases the number by 27. What is the original number?",
+    "hint": "Aptitude (Hard): Digits sum to 11 and differ by 3.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "47",
+      "56",
+      "65",
+      "74"
+    ],
+    "correctAnswer": "74",
+    "isActive": true
+  },
+  {
+    "text": "A father is 4 times as old as his son. In 8 years, he will be twice as old as his son. What is the son's present age?",
+    "hint": "Aptitude (Hard): F = 4S, F + 8 = 2(S + 8).",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "4",
+      "6",
+      "8",
+      "10"
+    ],
+    "correctAnswer": "8",
+    "isActive": true
+  },
+  {
+    "text": "A shopkeeper mixes 20 kg of rice costing ₹40/kg with 30 kg costing ₹50/kg. What is the average cost per kg of the mixture?",
+    "hint": "Aptitude (Hard): (20 * 40 + 30 * 50) / 50.",
+    "type": "NUMERICAL",
+    "isSnakeQuestion": false,
+    "isLadderQuestion": false,
+    "options": [
+      "₹44",
+      "₹46",
+      "₹48",
+      "₹50"
+    ],
+    "correctAnswer": "₹46",
     "isActive": true
   },
   {

@@ -174,14 +174,22 @@ async function seedBoardMaps() {
 }
 
 async function main() {
-  try {
-    await seedBoardMaps();
-  } catch (error) {
-    console.error('Error seeding board maps:', error);
-    throw error;
-  } finally {
-    await prisma.$disconnect();
+  const maxRetries = 3;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Attempt ${attempt} of ${maxRetries}...`);
+      await seedBoardMaps();
+      break;
+    } catch (error) {
+      console.error(`Attempt ${attempt} failed:`, error.message);
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      console.log('Waiting 3 seconds before retry...');
+      await new Promise(res => setTimeout(res, 3000));
+    }
   }
+  await prisma.$disconnect();
 }
 
 if (require.main === module) {

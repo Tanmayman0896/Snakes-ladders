@@ -871,7 +871,7 @@ export default function SuperAdminDashboard() {
                         </span>
                       )}
                     </div>
-                    {question.type === "MCQ" && question.options && question.options.length > 0 && (
+                    {question.options && question.options.length > 0 && (
                       <p className="text-xs text-gray-500 mt-1">Options: {question.options.join(", ")}</p>
                     )}
                     {(question.type === "MCQ" || question.type === "NUMERICAL") && question.correctAnswer && (

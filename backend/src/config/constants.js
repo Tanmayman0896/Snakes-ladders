@@ -18,9 +18,9 @@ const ROOMS = [
   // Start & End Room (Floor 3)
   'AB1 307',
   // Floor 2
-  'AB1 209', 'AB1 210', 'AB1 211', 'AB1 217', 'AB1 225',
+  'AB1 210', 'AB1 228', 'AB1 229',
   // Floor 3
-  'AB1 311', 'AB1 312', 'AB1 319', 'AB1 320'
+  'AB1 309', 'AB1 310', 'AB1 311', 'AB1 312'
 ];
 
 // Roles for authentication
