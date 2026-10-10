@@ -158,9 +158,13 @@ const getPendingCheckpoint = async (teamId) => {
   });
 
   if (checkpointWithQuestion) {
-    // Map question text to content for frontend
+    // Map question text to content and attach difficulty label for frontend
     if (checkpointWithQuestion.questionAssign?.question) {
-      checkpointWithQuestion.questionAssign.question.content = checkpointWithQuestion.questionAssign.question.text;
+      const q = checkpointWithQuestion.questionAssign.question;
+      q.content = q.text;
+      if (q.type === 'CODING') {
+        q.difficulty = (q.isLadderQuestion || checkpointWithQuestion.positionAfter > 80) ? 'Hard' : 'Easy';
+      }
     }
     return checkpointWithQuestion;
   }

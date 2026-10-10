@@ -6,7 +6,7 @@ const USER_QUESTIONS = [
     "hint": "Think about operators (e.g. arithmetic + and -, or bitwise XOR ^)",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int a = 5, b = 10; a = a ^ b; b = a ^ b; a = a ^ b; cout << a << ' ' << b;",
     "isActive": true
@@ -16,7 +16,7 @@ const USER_QUESTIONS = [
     "hint": "Use a loop from 1 to N and keep adding each number to a variable initialized to 0",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int n, sum = 0; cin >> n; for (int i = 1; i <= n; i++) sum += i; cout << sum;",
     "isActive": true
@@ -26,7 +26,7 @@ const USER_QUESTIONS = [
     "hint": "Take a number as input and multiply it by itself",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int n; cin >> n; cout << n * n;",
     "isActive": true
@@ -36,7 +36,7 @@ const USER_QUESTIONS = [
     "hint": "Use the modulus (%) operator with 10 to get the last digit.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int n; cin >> n; cout << n % 10;",
     "isActive": true
@@ -46,7 +46,7 @@ const USER_QUESTIONS = [
     "hint": "Use nested loops. The outer loop controls rows, inner loop prints numbers from 1 to row number.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int n; cin >> n; for (int i = 1; i <= n; i++) { for (int j = 1; j <= i; j++) cout << j << ' '; cout << endl; }",
     "isActive": true
@@ -56,7 +56,7 @@ const USER_QUESTIONS = [
     "hint": "Use two inner loops: spaces (n-i) and stars (2*i-1).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int n; cin >> n; for (int i = 1; i <= n; i++) { for (int j = 1; j <= n - i; j++) cout << ' '; for (int j = 1; j <= 2 * i - 1; j++) cout << '*'; cout << endl; }",
     "isActive": true
@@ -66,7 +66,7 @@ const USER_QUESTIONS = [
     "hint": "Use the Euclidean Algorithm: replace a with b and b with a % b until b is 0.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int a, b; cin >> a >> b; while (b != 0) { int temp = b; b = a % b; a = temp; } cout << a;",
     "isActive": true
@@ -76,7 +76,7 @@ const USER_QUESTIONS = [
     "hint": "Extract each digit using % 10, raise it to the number of digits, and add to sum. Compare with original.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int n, t, sum = 0, d = 0; cin >> n; t = n; while (t) { d++; t /= 10; } t = n; while (t) { sum += pow(t % 10, d); t /= 10; } cout << (sum == n ? 'Armstrong' : 'Not Armstrong');",
     "isActive": true
@@ -86,7 +86,7 @@ const USER_QUESTIONS = [
     "hint": "Convert uppercase to lowercase using ASCII (+32), then check against the 5 vowels.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int cnt=0; for(int i=0; str[i]; i++) { char c=str[i]; if(c>='A' && c<='Z') c+=32; if(c=='a'||c=='e'||c=='i'||c=='o'||c=='u') cnt++; }",
     "isActive": true
@@ -96,7 +96,7 @@ const USER_QUESTIONS = [
     "hint": "Track largest and second largest in one pass, shift m1 into m2 when a new max is found.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int m1=INT_MIN, m2=INT_MIN; for(int i=0; i<n; i++) { if(arr[i]>m1) { m2=m1; m1=arr[i]; } else if(arr[i]>m2 && arr[i]!=m1) m2=arr[i]; } printf('%d', m2);",
     "isActive": true
@@ -106,7 +106,7 @@ const USER_QUESTIONS = [
     "hint": "Use % 2 to check each element and add it to the matching sum.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int se=0, so=0; for(int i=0; i<n; i++) { if(arr[i]%2==0) se+=arr[i]; else so+=arr[i]; } printf('%d %d', se, so);",
     "isActive": true
@@ -116,7 +116,7 @@ const USER_QUESTIONS = [
     "hint": "Start with pos = -1, update it on the first match, and break.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int pos=-1; for(int i=0; i<n; i++) { if(arr[i]==key) { pos=i; break; } } printf('%d', pos);",
     "isActive": true
@@ -126,7 +126,7 @@ const USER_QUESTIONS = [
     "hint": "If any element is greater than the next one, the array is not sorted.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int ok=1; for(int i=0; i<n-1; i++) { if(arr[i]>arr[i+1]) { ok=0; break; } } printf(ok ? 'Sorted' : 'Not sorted');",
     "isActive": true
@@ -136,7 +136,7 @@ const USER_QUESTIONS = [
     "hint": "Compare adjacent elements and swap them if they are in the wrong order.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "for (int i = 0; i < n-1; i++) for (int j = 0; j < n-i-1; j++) if (a[j] > a[j+1]) swap(a[j], a[j+1]);",
     "isActive": true
@@ -146,7 +146,7 @@ const USER_QUESTIONS = [
     "hint": "Use a temporary variable or the built-in swap() function.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "swap(a[0], a[n-1]); for (int i = 0; i < n; i++) cout << a[i] << ' ';",
     "isActive": true
@@ -156,7 +156,7 @@ const USER_QUESTIONS = [
     "hint": "Use time(0) to get current system time and ctime() to convert to readable format.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "time_t now = time(0); cout << ctime(&now);",
     "isActive": true
@@ -166,7 +166,7 @@ const USER_QUESTIONS = [
     "hint": "Use time(0), localtime(), and put_time() with '%d-%m-%Y'.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "time_t now = time(0); tm *t = localtime(&now); cout << put_time(t, '%d-%m-%Y');",
     "isActive": true
@@ -176,7 +176,7 @@ const USER_QUESTIONS = [
     "hint": "Before inserting, check whether top == MAX - 1. If true, the stack is full.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "if (top == MAX - 1) cout << 'Stack Overflow'; else { top++; stack[top] = x; }",
     "isActive": true
@@ -186,7 +186,7 @@ const USER_QUESTIONS = [
     "hint": "Before pop(), check whether top == -1. If true, the stack is empty.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "if (top == -1) cout << 'Stack Underflow'; else { cout << 'Popped: ' << stack[top]; top--; }",
     "isActive": true
@@ -196,7 +196,7 @@ const USER_QUESTIONS = [
     "hint": "Check whether top == MAX - 1 before insertion. If not, stack[++top] = x.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "if (top == MAX - 1) cout << 'Stack Overflow'; else { stack[++top] = x; }",
     "isActive": true
@@ -206,7 +206,7 @@ const USER_QUESTIONS = [
     "hint": "Check whether top == -1. If not, return stack[top--].",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "if (top == -1) cout << 'Stack Underflow'; else { cout << stack[top]; top--; }",
     "isActive": true
@@ -216,7 +216,7 @@ const USER_QUESTIONS = [
     "hint": "Check rear == MAX - 1. If empty, initialize front = 0, increment rear, and insert.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "if (rear == MAX - 1) cout << 'Queue Overflow'; else { if (front == -1) front = 0; queue[++rear] = x; }",
     "isActive": true
@@ -226,7 +226,7 @@ const USER_QUESTIONS = [
     "hint": "Check front == -1 || front > rear. If not, display queue[front] and increment front.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "if (front == -1 || front > rear) cout << 'Queue Underflow'; else { cout << queue[front]; front++; }",
     "isActive": true
@@ -236,7 +236,7 @@ const USER_QUESTIONS = [
     "hint": "Use a for loop from 0 to 9 to input and display the elements.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int a[10]; for (int i = 0; i < 10; i++) cin >> a[i]; for (int i = 0; i < 10; i++) cout << a[i] << ' ';",
     "isActive": true
@@ -246,7 +246,7 @@ const USER_QUESTIONS = [
     "hint": "Left -> Root -> Right",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "void inorder(Node* root) { if (!root) return; inorder(root->left); cout << root->data << ' '; inorder(root->right); }",
     "isActive": true
@@ -256,7 +256,7 @@ const USER_QUESTIONS = [
     "hint": "Root -> Left -> Right",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "void preorder(Node* root) { if (!root) return; cout << root->data << ' '; preorder(root->left); preorder(root->right); }",
     "isActive": true
@@ -266,7 +266,7 @@ const USER_QUESTIONS = [
     "hint": "Left -> Right -> Root",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "void postorder(Node* root) { if (!root) return; postorder(root->left); postorder(root->right); cout << root->data << ' '; }",
     "isActive": true
@@ -276,7 +276,7 @@ const USER_QUESTIONS = [
     "hint": "Use printf",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "printf('Name: \\n'); printf('Event: Venom 2.0');",
     "isActive": true
@@ -286,7 +286,7 @@ const USER_QUESTIONS = [
     "hint": "Use loop: for (int i = 1; i <= 100; i++) printf('%d ', i);",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "for (int i = 1; i <= 100; i++) printf('%d ', i);",
     "isActive": true
@@ -296,7 +296,7 @@ const USER_QUESTIONS = [
     "hint": "Use loop from 'A' to 'Z' and print using %c.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "for (char i = 'A'; i <= 'Z'; i++) printf('%c ', i);",
     "isActive": true
@@ -306,7 +306,7 @@ const USER_QUESTIONS = [
     "hint": "Recursive: return 1 when n is 0 or 1; otherwise, return n * factorial(n-1).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int factorial(int n) { if (n <= 1) return 1; return n * factorial(n - 1); }",
     "isActive": true
@@ -316,7 +316,7 @@ const USER_QUESTIONS = [
     "hint": "First two terms are 0 and 1. Return fib(n-1) + fib(n-2).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "int fib(int n) { if (n <= 1) return n; return fib(n - 1) + fib(n - 2); }",
     "isActive": true
@@ -326,7 +326,7 @@ const USER_QUESTIONS = [
     "hint": "Post-increment uses current value first, then increments it.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "5 6",
     "isActive": true
@@ -336,7 +336,7 @@ const USER_QUESTIONS = [
     "hint": "Both conditions are true. Else belongs to the nearest unmatched if.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "A",
     "isActive": true
@@ -346,7 +346,7 @@ const USER_QUESTIONS = [
     "hint": "Notice the semicolon immediately after the for loop header.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "6",
     "isActive": true
@@ -356,7 +356,7 @@ const USER_QUESTIONS = [
     "hint": "Integer division: 10 / 3 = 3, then 3 * 3 = 9.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "9",
     "isActive": true
@@ -366,7 +366,7 @@ const USER_QUESTIONS = [
     "hint": "(=) assigns 5, which evaluates to non-zero (true).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "True",
     "isActive": true
@@ -376,7 +376,7 @@ const USER_QUESTIONS = [
     "hint": "Left-shifting by one bit doubles positive integer.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "8",
     "isActive": true
@@ -386,7 +386,7 @@ const USER_QUESTIONS = [
     "hint": "Logical operators return 1 for true and 0 for false in C.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "1",
     "isActive": true
@@ -396,7 +396,7 @@ const USER_QUESTIONS = [
     "hint": "Dereferencing a pointer modifies original variable.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "15",
     "isActive": true
@@ -406,7 +406,7 @@ const USER_QUESTIONS = [
     "hint": "A do-while loop executes its body before checking condition.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "5 4 3 ",
     "isActive": true
@@ -416,7 +416,7 @@ const USER_QUESTIONS = [
     "hint": "Ignore constants and lower-order terms.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n)",
     "isActive": true
@@ -426,7 +426,7 @@ const USER_QUESTIONS = [
     "hint": "Two recursive calls, each with half input: T(n) = 2T(n/2) + O(1) => O(n).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n)",
     "isActive": true
@@ -436,7 +436,7 @@ const USER_QUESTIONS = [
     "hint": "Harmonic sum: n/1 + n/2 + n/3 + ... = n * ln(n) = O(n log n).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n log n)",
     "isActive": true
@@ -446,7 +446,7 @@ const USER_QUESTIONS = [
     "hint": "Both loops execute sqrt(n) times: sqrt(n) * sqrt(n) = n.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n)",
     "isActive": true
@@ -456,7 +456,7 @@ const USER_QUESTIONS = [
     "hint": "Loop variable multiplies by 3: O(log_3 n) = O(log n).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(log n)",
     "isActive": true
@@ -466,7 +466,7 @@ const USER_QUESTIONS = [
     "hint": "Factorial growth dominates exponential and polynomial.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n!)",
     "isActive": true
@@ -476,7 +476,7 @@ const USER_QUESTIONS = [
     "hint": "Logarithm applied twice.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(log log n)",
     "isActive": true
@@ -486,7 +486,7 @@ const USER_QUESTIONS = [
     "hint": "(n^2 + n) / 2 = O(n^2).",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n²)",
     "isActive": true
@@ -496,7 +496,7 @@ const USER_QUESTIONS = [
     "hint": "Factorial grows faster than exponential.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(n!)",
     "isActive": true
@@ -506,7 +506,7 @@ const USER_QUESTIONS = [
     "hint": "n^0.5 dominates log n.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "O(√n)",
     "isActive": true
@@ -516,7 +516,7 @@ const USER_QUESTIONS = [
     "hint": "Use <h1> and <h2> tags inside <body> section to display name and event.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -526,7 +526,7 @@ const USER_QUESTIONS = [
     "hint": "Use the <img> tag with src and alt.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -536,7 +536,7 @@ const USER_QUESTIONS = [
     "hint": "Use style='background-color: red;' on body tag.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -546,7 +546,7 @@ const USER_QUESTIONS = [
     "hint": "Use style='font-size: 30px;' on heading tag.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -556,7 +556,7 @@ const USER_QUESTIONS = [
     "hint": "Use style='color: red;' on heading tag.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -566,7 +566,7 @@ const USER_QUESTIONS = [
     "hint": "Use <a href='https://cs.ieeemuj.com/'>Visit</a>.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -576,7 +576,7 @@ const USER_QUESTIONS = [
     "hint": "Use <hr> tag between two <p> tags.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -586,7 +586,7 @@ const USER_QUESTIONS = [
     "hint": "Use style='text-align: center;' on heading.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -596,7 +596,7 @@ const USER_QUESTIONS = [
     "hint": "Use style='font-family: Snap ITC;'.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
     "isActive": true
@@ -606,9 +606,609 @@ const USER_QUESTIONS = [
     "hint": "Use <button style='background-color: red; color: white;'>Venom 2.0</button>.",
     "type": "CODING",
     "isSnakeQuestion": true,
-    "isLadderQuestion": true,
+    "isLadderQuestion": false,
     "options": [],
     "correctAnswer": "accepted",
+    "isActive": true
+  },
+  {
+    "text": "Implement Binary Search on a sorted array of N elements to find a target key in O(log n) time.",
+    "hint": "Maintain low = 0, high = n - 1. Compute mid = low + (high - low) / 2 and narrow the search half each step.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int low = 0, high = n - 1, ans = -1; while (low <= high) { int mid = low + (high - low) / 2; if (arr[mid] == key) { ans = mid; break; } else if (arr[mid] < key) low = mid + 1; else high = mid - 1; }",
+    "isActive": true
+  },
+  {
+    "text": "Write a function to reverse a Singly Linked List iteratively in O(n) time and O(1) auxiliary space.",
+    "hint": "Use three pointers: prev = NULL, curr = head, and next = NULL. Rewire curr->next = prev in a loop.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "Node* reverse(Node* head) { Node *prev = NULL, *curr = head, *next = NULL; while (curr) { next = curr->next; curr->next = prev; prev = curr; curr = next; } return prev; }",
+    "isActive": true
+  },
+  {
+    "text": "Write a function to detect whether a Singly Linked List contains a cycle (loop) in O(n) time and O(1) space.",
+    "hint": "Use Floyd's Cycle-Finding Algorithm: move slow pointer by 1 step and fast pointer by 2 steps.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "bool hasCycle(Node* head) { Node *slow = head, *fast = head; while (fast && fast->next) { slow = slow->next; fast = fast->next->next; if (slow == fast) return true; } return false; }",
+    "isActive": true
+  },
+  {
+    "text": "Kadane's Algorithm: Find the maximum sum of a contiguous subarray in an array (which may contain negative numbers) in O(n) time.",
+    "hint": "Track currentSum and maxSum. Update currentSum = max(arr[i], currentSum + arr[i]) and maxSum = max(maxSum, currentSum).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int maxSum = arr[0], cur = arr[0]; for (int i = 1; i < n; i++) { cur = max(arr[i], cur + arr[i]); maxSum = max(maxSum, cur); } cout << maxSum;",
+    "isActive": true
+  },
+  {
+    "text": "Write a program/function to check if a string of brackets (), {}, [] is balanced using a Stack.",
+    "hint": "Push opening brackets onto stack; on closing bracket, check if stack top matches the corresponding opening bracket.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "stack<char> st; for (char c : s) { if (c=='('||c=='{'||c=='[') st.push(c); else { if (st.empty()) return false; char t = st.top(); st.pop(); if ((c==')'&&t!='(')||(c=='}'&&t!='{')||(c==']'&&t!='[')) return false; } } return st.empty();",
+    "isActive": true
+  },
+  {
+    "text": "Merge two sorted arrays A (size n) and B (size m) into a single sorted array in O(n + m) time.",
+    "hint": "Use two pointers i = 0 and j = 0, compare A[i] and B[j], and append the smaller element to the result array.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int i = 0, j = 0, k = 0; while (i < n && j < m) C[k++] = (A[i] <= B[j]) ? A[i++] : B[j++]; while (i < n) C[k++] = A[i++]; while (j < m) C[k++] = B[j++];",
+    "isActive": true
+  },
+  {
+    "text": "Rotate an array of N elements to the right by K positions in O(n) time and O(1) extra space.",
+    "hint": "Set k = k % n. Reverse the entire array, then reverse the first k elements, then reverse the remaining n - k elements.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "k %= n; reverse(arr, arr + n); reverse(arr, arr + k); reverse(arr + k, arr + n);",
+    "isActive": true
+  },
+  {
+    "text": "Dutch National Flag Problem: Sort an array containing only 0s, 1s, and 2s in a single pass O(n) time and O(1) space.",
+    "hint": "Maintain three pointers: low = 0, mid = 0, high = n - 1. Swap based on whether arr[mid] is 0, 1, or 2.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int low = 0, mid = 0, high = n - 1; while (mid <= high) { if (a[mid] == 0) swap(a[low++], a[mid++]); else if (a[mid] == 1) mid++; else swap(a[mid], a[high--]); }",
+    "isActive": true
+  },
+  {
+    "text": "Check whether two strings S1 and S2 are anagrams of each other in O(n) time using a frequency array.",
+    "hint": "If lengths differ return false. Increment count[s1[i]] and decrement count[s2[i]], then verify all counts are 0.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int freq[256] = {0}; if (strlen(s1) != strlen(s2)) return false; for (int i = 0; s1[i]; i++) { freq[(unsigned char)s1[i]]++; freq[(unsigned char)s2[i]]--; } for (int i = 0; i < 256; i++) if (freq[i] != 0) return false; return true;",
+    "isActive": true
+  },
+  {
+    "text": "In an array where every element appears twice except for one element that appears once, find that single element in O(n) time and O(1) space.",
+    "hint": "Use bitwise XOR (^): x ^ x = 0 and x ^ 0 = x. XOR all elements together.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int ans = 0; for (int i = 0; i < n; i++) ans ^= arr[i]; cout << ans;",
+    "isActive": true
+  },
+  {
+    "text": "Count the number of set bits (1s) in the binary representation of an integer N using Brian Kernighan's algorithm.",
+    "hint": "Repeatedly do n = n & (n - 1) to clear the lowest set bit and increment a counter until n becomes 0.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int count = 0; while (n > 0) { n = n & (n - 1); count++; } cout << count;",
+    "isActive": true
+  },
+  {
+    "text": "Write a single bitwise expression (without loops) to check whether a positive integer N is a power of 2.",
+    "hint": "A power of 2 has only one set bit, so n > 0 and (n & (n - 1)) == 0.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "bool isPowerOfTwo = (n > 0) && ((n & (n - 1)) == 0);",
+    "isActive": true
+  },
+  {
+    "text": "Write a recursive function to find the Height (Maximum Depth) of a Binary Tree.",
+    "hint": "Base case: if root is NULL return 0. Otherwise return 1 + max(height(root->left), height(root->right)).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int height(Node* root) { if (!root) return 0; return 1 + max(height(root->left), height(root->right)); }",
+    "isActive": true
+  },
+  {
+    "text": "Write a function to check whether a Binary Tree is a valid Binary Search Tree (BST).",
+    "hint": "Pass (root, minVal, maxVal) recursively. Every node's value must strictly lie in (minVal, maxVal).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "bool isBST(Node* r, long minV, long maxV) { if (!r) return true; if (r->data <= minV || r->data >= maxV) return false; return isBST(r->left, minV, r->data) && isBST(r->right, r->data, maxV); }",
+    "isActive": true
+  },
+  {
+    "text": "Find the Lowest Common Ancestor (LCA) of two nodes P and Q in a Binary Search Tree (BST).",
+    "hint": "If both p and q are smaller than root, go left; if both are larger, go right; otherwise root is the LCA.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "Node* lca(Node* root, int p, int q) { while (root) { if (p < root->data && q < root->data) root = root->left; else if (p > root->data && q > root->data) root = root->right; else return root; } return NULL; }",
+    "isActive": true
+  },
+  {
+    "text": "Find the Next Greater Element for every element in an array in O(n) time using a Stack.",
+    "hint": "Traverse from right to left. Pop stack elements <= arr[i]. The stack top is the next greater element (or -1 if empty), then push arr[i].",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "stack<int> st; vector<int> nge(n); for (int i = n - 1; i >= 0; i--) { while (!st.empty() && st.top() <= arr[i]) st.pop(); nge[i] = st.empty() ? -1 : st.top(); st.push(arr[i]); }",
+    "isActive": true
+  },
+  {
+    "text": "Given a sorted array of N integers, find if there exists a pair of elements whose sum equals Target in O(n) time and O(1) space.",
+    "hint": "Use the two-pointer technique: left = 0, right = n - 1. Move left++ if sum < target, right-- if sum > target.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int l = 0, r = n - 1; while (l < r) { int sum = arr[l] + arr[r]; if (sum == target) return true; else if (sum < target) l++; else r--; } return false;",
+    "isActive": true
+  },
+  {
+    "text": "Trapping Rain Water: Given an array height[] of N non-negative integers, compute the total water trapped after raining in O(n) time.",
+    "hint": "Use two pointers (l, r) with leftMax and rightMax, or precompute prefixMax and suffixMax arrays.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int l = 0, r = n - 1, lMax = 0, rMax = 0, water = 0; while (l < r) { if (h[l] < h[r]) { lMax = max(lMax, h[l]); water += lMax - h[l++]; } else { rMax = max(rMax, h[r]); water += rMax - h[r--]; } }",
+    "isActive": true
+  },
+  {
+    "text": "Implement the Sieve of Eratosthenes to mark all prime numbers from 2 to N in O(n log log n) time.",
+    "hint": "Create a boolean array isPrime[0..n] initialized to true. For i = 2 to i*i <= n, if isPrime[i], mark all multiples j = i*i to n step i as false.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "vector<bool> prime(n + 1, true); prime[0] = prime[1] = false; for (int i = 2; i * i <= n; i++) if (prime[i]) for (int j = i * i; j <= n; j += i) prime[j] = false;",
+    "isActive": true
+  },
+  {
+    "text": "Dynamic Programming (Climbing Stairs): Find the number of distinct ways to reach the Nth stair if you can take 1 or 2 steps at a time, in O(n) time and O(1) space.",
+    "hint": "ways(n) = ways(n-1) + ways(n-2). Use two variables prev2 = 1, prev1 = 1 and iterate from 2 to n.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "int prev2 = 1, prev1 = 1; for (int i = 2; i <= n; i++) { int cur = prev1 + prev2; prev2 = prev1; prev1 = cur; } cout << prev1;",
+    "isActive": true
+  },
+  {
+    "text": "Transpose an N x N matrix in-place without using an extra matrix.",
+    "hint": "Swap mat[i][j] with mat[j][i] only for the upper triangle (j = i + 1 to n - 1).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) swap(mat[i][j], mat[j][i]);",
+    "isActive": true
+  },
+  {
+    "text": "Rotate an N x N matrix by 90 degrees clockwise in-place.",
+    "hint": "Step 1: Transpose the matrix in-place (swap mat[i][j] and mat[j][i]). Step 2: Reverse each row.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) swap(mat[i][j], mat[j][i]); for (int i = 0; i < n; i++) reverse(mat[i], mat[i] + n);",
+    "isActive": true
+  },
+  {
+    "text": "Find the middle node of a Singly Linked List in a single pass.",
+    "hint": "Use slow and fast pointers initialized to head. Advance slow by 1 node and fast by 2 nodes until fast reaches the end.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "Node* middleNode(Node* head) { Node *slow = head, *fast = head; while (fast && fast->next) { slow = slow->next; fast = fast->next->next; } return slow; }",
+    "isActive": true
+  },
+  {
+    "text": "Implement the Enqueue operation in a Circular Queue of capacity MAX.",
+    "hint": "Full condition is (rear + 1) % MAX == front. Otherwise update rear = (rear + 1) % MAX and insert.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "if ((rear + 1) % MAX == front) cout << 'Circular Queue Full'; else { if (front == -1) front = 0; rear = (rear + 1) % MAX; cq[rear] = x; }",
+    "isActive": true
+  },
+  {
+    "text": "Binary Exponentiation: Write an iterative or recursive function to compute (a^b) % MOD in O(log b) time.",
+    "hint": "Square the base and halve the exponent b >>= 1 each step; multiply into result whenever (b & 1) is odd.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "long long power(long long a, long long b, long long mod) { long long res = 1; a %= mod; while (b > 0) { if (b & 1) res = (res * a) % mod; a = (a * a) % mod; b >>= 1; } return res; }",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int arr[] = {10, 20, 30, 40};\n  int *p = arr;\n  printf(\"%d \", *p++);\n  printf(\"%d \", ++*p);\n  printf(\"%d\", *++p);\n  return 0;\n}\nWhat is the exact output?",
+    "hint": "*p++ prints arr[0] (10) and moves p to arr[1]; ++*p increments arr[1] to 21 and prints 21; *++p moves p to arr[2] and prints 30.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "10 21 30",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint fun(int n) {\n  static int x = 0;\n  if (n > 0) {\n    x++;\n    return fun(n - 1) + x;\n  }\n  return 0;\n}\nint main() {\n  printf(\"%d\", fun(5));\n  return 0;\n}\nWhat is the output?",
+    "hint": "x is static, so it is incremented 5 times to 5 before any addition happens on unwinding: 5 + 5 + 5 + 5 + 5 = 25.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "25",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int a = 1, b = 1, c = 1;\n  int d = ++a || ++b && ++c;\n  printf(\"%d %d %d %d\", a, b, c, d);\n  return 0;\n}\nWhat is the output?",
+    "hint": "&& has higher precedence than ||, so it groups as (++a) || (++b && ++c). Since ++a is 2 (true), short-circuit evaluation skips (++b && ++c)!",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "2 1 1 1",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int a = 5, b = 3;\n  printf(\"%d\", a & b == 3);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Relational == has higher precedence than bitwise &. So (b == 3) evaluates to 1 first, then 5 & 1 = 1.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "1",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nvoid trace(int n) {\n  if (n <= 0) return;\n  printf(\"%d \", n);\n  trace(n - 1);\n  printf(\"%d \", n);\n}\nint main() {\n  trace(3);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Prints n on the way down (3 2 1) and again on the way back up as stack frames unwind (1 2 3).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "3 2 1 1 2 3",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint f(int n) {\n  if (n <= 1) return 1;\n  return f(n - 1) + f(n - 2);\n}\nint main() {\n  printf(\"%d\", f(5));\n  return 0;\n}\nWhat is the output?",
+    "hint": "f(0)=1, f(1)=1, f(2)=2, f(3)=3, f(4)=5, f(5)=8.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "8",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  char s[] = \"GATE2026\";\n  char *p = s;\n  printf(\"%s\", p + p[3] - p[1]);\n  return 0;\n}\nWhat is the output?",
+    "hint": "p[3] is 'E' (69) and p[1] is 'A' (65). 'E' - 'A' = 4. So p + 4 points to \"2026\".",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "2026",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int i = 5;\n  int sz = sizeof(++i);\n  printf(\"%d\", i);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Expressions inside sizeof() are evaluated at compile time for their type only; side effects (++i) do not execute at runtime.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "5",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int a, b;\n  a = (10, 20, 30);\n  b = 10, 20, 30;\n  printf(\"%d %d\", a, b);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Parentheses force comma operator in a (evaluates to last value 30). Assignment = has higher precedence than comma in b, so b gets 10.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "30 10",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\n#define SQR(x) x * x\nint main() {\n  printf(\"%d\", SQR(3 + 2));\n  return 0;\n}\nWhat is the output?",
+    "hint": "Macros perform textual substitution without parentheses: 3 + 2 * 3 + 2 = 3 + 6 + 2 = 11.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "11",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int a[2][3] = {{1, 2, 3}, {4, 5, 6}};\n  printf(\"%d\", *(*(a + 1) + 2));\n  return 0;\n}\nWhat is the output?",
+    "hint": "*(*(a + 1) + 2) is equivalent to a[1][2].",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "6",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nvoid mystery(int *p, int *q) {\n  p = q;\n  *p = 100;\n}\nint main() {\n  int a = 10, b = 20;\n  mystery(&a, &b);\n  printf(\"%d %d\", a, b);\n  return 0;\n}\nWhat is the output?",
+    "hint": "p is reassigned to point to b (same as q), and *p = 100 modifies b to 100 while leaving a unchanged at 10.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "10 100",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  unsigned int x = 1;\n  printf(\"%u\", (x << 4) ^ (x << 2));\n  return 0;\n}\nWhat is the output?",
+    "hint": "1 << 4 is 16 (10000 in binary) and 1 << 2 is 4 (00100 in binary). 16 ^ 4 = 20.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "20",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int x = 012;\n  printf(\"%d\", x + 5);\n  return 0;\n}\nWhat is the output?",
+    "hint": "A leading 0 in C denotes an octal literal! 012 in octal is 1*8 + 2 = 10 in decimal. 10 + 5 = 15.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "15",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int arr[5] = {10, 20, 30, 40, 50};\n  int *p = &arr[1];\n  int *q = &arr[4];\n  printf(\"%ld\", q - p);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Subtracting two pointers to the same array gives the number of elements between them (4 - 1 = 3), not the byte difference.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "3",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int a = 0;\n  printf(\"%d %d\", !a, ~a);\n  return 0;\n}\nWhat is the output?",
+    "hint": "!0 is logical NOT (1). ~0 is bitwise NOT (all bits 1, which represents -1 in 2's complement).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "1 -1",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int n = 29, cnt = 0;\n  while (n) {\n    n &= (n - 1);\n    cnt++;\n  }\n  printf(\"%d\", cnt);\n  return 0;\n}\nWhat is the output?",
+    "hint": "The loop counts the number of set bits in 29. Since 29 = 16 + 8 + 4 + 1 = 11101 in binary, it has 4 set bits.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "4",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  char *p[] = {\"IEEE\", \"VENOM\", \"MUJ\"};\n  printf(\"%c\", *(*(p + 1) + 2));\n  return 0;\n}\nWhat is the output?",
+    "hint": "*(p + 1) is \"VENOM\", and *(*(p + 1) + 2) is index 2 of \"VENOM\", which is 'N'.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "N",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int sum = 0;\n  for (int i = 1; i <= 4; i++) {\n    switch (i) {\n      case 1: sum += 1;\n      case 2: sum += 2; break;\n      case 3: sum += 3;\n      default: sum += 4;\n    }\n  }\n  printf(\"%d\", sum);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Watch fall-through where break is missing! i=1 adds 1+2=3; i=2 adds 2; i=3 adds 3+4=7; i=4 adds 4. Total = 3+2+7+4 = 16.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "16",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint f(int n) {\n  if (n <= 1) return n;\n  if (n % 2 == 0) return n + f(n / 2);\n  return f((n + 1) / 2) + f((n - 1) / 2);\n}\nint main() {\n  printf(\"%d\", f(7));\n  return 0;\n}\nWhat is the output?",
+    "hint": "f(7) = f(4) + f(3); f(4) = 4 + f(2) = 4 + 2 + f(1) = 7; f(3) = f(2) + f(1) = 3 + 1 = 4. Total = 7 + 4 = 11.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "11",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int a[] = {2, 4, 6, 8, 10};\n  int *p = a + 2;\n  printf(\"%d %d\", p[-1], p[1]);\n  return 0;\n}\nWhat is the output?",
+    "hint": "p points to a[2] (6). p[-1] is *(p - 1) = a[1] = 4, and p[1] is *(p + 1) = a[3] = 8.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "4 8",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int x = 3, y = 4, z = 5;\n  printf(\"%d\", x < y < z);\n  return 0;\n}\nWhat is the output?",
+    "hint": "< associates left-to-right: (3 < 4) evaluates to 1, and then (1 < 5) evaluates to 1.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "1",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint main() {\n  int x = 10, y = 5, z = 3;\n  printf(\"%d\", x > y > z);\n  return 0;\n}\nWhat is the output?",
+    "hint": "> associates left-to-right: (10 > 5) evaluates to 1, and then (1 > 3) evaluates to 0!",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "0",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nvoid fun(int **pp) {\n  static int val = 99;\n  *pp = &val;\n}\nint main() {\n  int a = 10;\n  int *p = &a;\n  fun(&p);\n  printf(\"%d\", *p);\n  return 0;\n}\nWhat is the output?",
+    "hint": "Double pointer pp modifies p itself in main() to point to static variable val (99).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "99",
+    "isActive": true
+  },
+  {
+    "text": "#include <stdio.h>\nint countCalls(int n) {\n  if (n <= 1) return 1;\n  return 1 + 2 * countCalls(n - 1);\n}\nint main() {\n  printf(\"%d\", countCalls(4));\n  return 0;\n}\nWhat is the output?",
+    "hint": "countCalls(1)=1, countCalls(2)=3, countCalls(3)=7, countCalls(4)=15 (2^n - 1).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "15",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of the recurrence relation: T(n) = 4T(n/2) + n²",
+    "hint": "By Master Theorem: a = 4, b = 2, n^(log_b a) = n^2. Since f(n) = n^2 matches Case 2, T(n) = O(n² log n).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n² log n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of the recurrence relation: T(n) = 2T(n/2) + n",
+    "hint": "Merge Sort recurrence! By Master Theorem (a=2, b=2, f(n)=n), T(n) = O(n log n).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n log n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the tight time complexity of:\nfor (int i = 1; i < n; i *= 2)\n  for (int j = 0; j < i; j++)\n    sum++;",
+    "hint": "The inner loop runs 1 + 2 + 4 + 8 + ... + n times, which is a geometric series summing to 2n - 1 = O(n), NOT O(n log n)!",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of the recurrence: T(n) = T(n - 1) + T(n - 2) + O(1)",
+    "hint": "This is the naive recursive Fibonacci recurrence, which grows exponentially.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(2^n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of:\nvoid solve(int n) {\n  if (n <= 2) return;\n  solve(sqrt(n));\n}",
+    "hint": "Substitute n = 2^m; each call halves m (2^(m/2)), taking O(log m) = O(log log n) steps.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(log log n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of:\nfor (int i = 1; i <= n; i++)\n  for (int j = 1; j <= i * i; j++)\n    for (int k = 1; k <= n / 2; k++)\n      cnt++;",
+    "hint": "For each i, middle loop runs i^2 times and inner runs n/2 times. Sum of i^2 from 1 to n is O(n^3); multiplied by n/2 gives O(n^4).",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n^4)",
+    "isActive": true
+  },
+  {
+    "text": "What is the tightest time complexity of building a Binary Max-Heap from an unsorted array of N elements using the bottom-up heapify approach?",
+    "hint": "Most nodes are near the bottom of the tree and travel very few levels; the sum of heights is linear.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of the recurrence: T(n) = T(n / 2) + O(1)",
+    "hint": "Binary Search recurrence: problem size halves at each step with constant work.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(log n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of:\nfor (int i = n; i >= 1; i /= 2)\n  for (int j = 1; j <= n; j++)\n    cnt++;",
+    "hint": "Outer loop executes log_2(n) times, and inner loop executes n times independently on each iteration.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n log n)",
+    "isActive": true
+  },
+  {
+    "text": "Find the time complexity of the recurrence: T(n) = T(n - 1) + n",
+    "hint": "Unrolling gives n + (n - 1) + (n - 2) + ... + 1 = n(n + 1)/2.",
+    "type": "CODING",
+    "isSnakeQuestion": true,
+    "isLadderQuestion": true,
+    "options": [],
+    "correctAnswer": "O(n²)",
     "isActive": true
   },
   {
@@ -2964,7 +3564,7 @@ const USER_QUESTIONS = [
 ];
 
 async function seedQuestions() {
-  console.log('🌱 Seeding user questions (245 questions)...\n');
+  console.log('🌱 Seeding user questions (' + USER_QUESTIONS.length + ' questions)...\n');
 
   // Remove existing questions first to prevent duplicates
   await prisma.questionAssignment.deleteMany({});
@@ -2982,13 +3582,17 @@ async function seedQuestions() {
 
   const totalInDb = await prisma.question.count();
   const codingCount = await prisma.question.count({ where: { type: 'CODING' } });
+  const easyCodingCount = await prisma.question.count({ where: { type: 'CODING', isLadderQuestion: false } });
+  const hardCodingCount = await prisma.question.count({ where: { type: 'CODING', isLadderQuestion: true } });
   const physicalCount = await prisma.question.count({ where: { type: 'PHYSICAL' } });
   const numericalCount = await prisma.question.count({ where: { type: 'NUMERICAL' } });
   const mcqCount = await prisma.question.count({ where: { type: 'MCQ' } });
 
   console.log('\n✅ Questions successfully seeded!');
   console.log(`📊 Total questions in database: ${totalInDb}`);
-  console.log(`   • Coding / Output (Snakes & Ladders): ${codingCount}`);
+  console.log(`   • Coding / Output Total (Snakes & Ladders): ${codingCount}`);
+  console.log(`     - Easy Coding (Blocks 1–80):   ${easyCodingCount}`);
+  console.log(`     - Hard Coding (Blocks 81–150): ${hardCodingCount}`);
   console.log(`   • Physical challenges (Blank blocks): ${physicalCount}`);
   console.log(`   • Numerical questions (Blank blocks): ${numericalCount}`);
   console.log(`   • MCQ questions (Blank blocks): ${mcqCount}`);

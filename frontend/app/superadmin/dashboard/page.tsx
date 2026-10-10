@@ -923,6 +923,17 @@ export default function SuperAdminDashboard() {
                       >
                         {question.type}
                       </span>
+                      {question.type === "CODING" && (
+                        <span
+                          className={`text-xs px-2 py-1 rounded font-semibold ${
+                            question.isLadderQuestion
+                              ? "bg-red-100 text-red-700 border border-red-200"
+                              : "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                          }`}
+                        >
+                          {question.isLadderQuestion ? "🔥 Hard (Block > 80)" : "Easy (Block 1–80)"}
+                        </span>
+                      )}
                       {(question.type === "MCQ" || question.type === "NUMERICAL") && (
                         <span className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600">
                           Auto-Check
@@ -932,7 +943,7 @@ export default function SuperAdminDashboard() {
                     {question.options && question.options.length > 0 && (
                       <p className="text-xs text-gray-500 mt-1">Options: {question.options.join(", ")}</p>
                     )}
-                    {(question.type === "MCQ" || question.type === "NUMERICAL") && question.correctAnswer && (
+                    {question.correctAnswer && (
                       <p className="text-xs text-gray-500 mt-1">Answer: {question.correctAnswer}</p>
                     )}
                   </div>
